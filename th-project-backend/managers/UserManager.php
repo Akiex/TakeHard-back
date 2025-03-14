@@ -33,9 +33,7 @@ class UserManager {
             'role'       => $user->getRole(),
         ]);
     
-        if (!$result) {
-            error_log("Erreur SQL : " . print_r($stmt->errorInfo(), true));
-        }
+
     
         return $result;
     }
@@ -60,10 +58,7 @@ class UserManager {
             'role'       => $user->getRole(),
             'id'         => $user->getId(),
         ]);
-    
-        if (!$result) {
-            error_log("Erreur SQL : " . print_r($stmt->errorInfo(), true));
-        }
+
     
         return $result;
     }
