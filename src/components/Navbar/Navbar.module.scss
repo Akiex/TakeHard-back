@@ -1,0 +1,90 @@
+@import "../../styles/variables.scss";
+.navbar {
+  position: relative;
+  background-color: $text-color;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.burger {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  display: block;
+}
+
+.navMenu {
+  display: none;
+  flex-direction: column;
+  background-color: #222;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 33vw;
+  padding: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.navMenu.open {
+  display: flex;
+}
+
+.navMenu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.navMenu li {
+  padding: 10px;
+}
+
+.navMenu a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  header {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .burger {
+    display: none;
+  }
+  .navbar {
+    position: sticky;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+  }
+  .navMenu {
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+    background: none;
+    justify-content: space-around;
+    z-index: 10;
+    ul {
+      display: flex;
+      li {
+        a {
+          margin: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          border-radius: 10px;
+          padding: 1em;
+        }
+        a:hover {
+          text-decoration: none;
+          background-color: $darkred-color;
+          box-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+@import "../../components/Button/Button.module.scss";
+@import "../../components/Header/Header.module.scss";
+@import "../../components/Footer/Footer.module.scss";
+@import "../../components/Navbar/Navbar.module.scss";
+@import "../../components/Card/Card.module.scss";
+@import "../../styles/variables.scss";
+h2 {
+  text-align: center;
+}
+.container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: rows;
+  justify-content: center;
+  align-items: center;
+}
+section {
+  margin-top: 3em;
+}
