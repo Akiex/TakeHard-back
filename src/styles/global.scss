@@ -1,0 +1,24 @@
+@import "./_variables.scss";
+@import "./mixins.scss";
+@import "../pages/Home/Home.module.scss";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Bebas Neue";
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+body {
+  background-color: $white-color;
+  color: $text-color;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+}

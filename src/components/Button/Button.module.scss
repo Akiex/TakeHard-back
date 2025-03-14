@@ -1,0 +1,30 @@
+@import "../../styles/variables.scss";
+.primary {
+  background-color: $darkred-color;
+  color: $white-color;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: $orange-color;
+  }
+}
+
+.secondary {
+  background-color: $darkred-color;
+  color: $white-color;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: $orange-color;
+  }
+}
