@@ -2,15 +2,18 @@
 
 // Container for list of cards
 .card-list {
-  position: relative;        // pour position absolute des cartes sélectionnées
-  width: 90%;
-  margin: auto;
+  position: relative;
+  width: 100%; // au lieu de 90%
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1em;
   display: flex;
-  flex-wrap: nowrap;           // scroll horizontal sur mobile
+  flex-wrap: nowrap;
   overflow-x: auto;
   gap: 1em;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
+  box-sizing: border-box;
 }
 
 // Mobile: stacked cards under 768px
@@ -30,6 +33,7 @@
   padding: 1em;
   background-color: $darkred-color;
   color: $white-color;
+  width:80%;
 
   h4 {
     text-align: center;
@@ -49,6 +53,7 @@
   .cardTemplate {
     flex: 0 0 90%;
     max-width: 90%;
+    width:80%;
     height: auto; // hauteur fluide selon contenu
   }
 }

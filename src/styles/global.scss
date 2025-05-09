@@ -10,8 +10,9 @@
 }
 
   main {
-    height: 100vh;
+    min-height: 100vh;
     width:100vw;
+    text-align: center;
   }
 h1,
 h2,
@@ -24,5 +25,6 @@ body {
   color: $text-color;
     height: 100vh;
     width:100vw;
+      overflow-x: hidden;
 }
 
