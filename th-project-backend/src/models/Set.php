@@ -1,4 +1,5 @@
 <?php
+namespace App\Models;
 class Set {
     private int $id;
     private int $sets;
@@ -25,6 +26,7 @@ class Set {
     public function getReps(): int { return $this->reps; }
     public function getRestTime(): int { return $this->rest_time; }
     public function getWeight(): ?float { return $this->weight; }
+    
 
     public function setId(int $id): void { $this->id = $id; }
     public function setSets(int $sets): void { $this->sets = $sets; }

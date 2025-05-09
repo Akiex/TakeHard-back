@@ -1,14 +1,20 @@
 <?php
+namespace App\Controllers;
+
+use App\Managers\TemplateManager;
+use App\Models\Template;
+use PDO;
+use PDOException;
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../managers/TemplateManager.php';
 require_once __DIR__ . '/../models/Template.php';
 
 class TemplateController {
+    
     private TemplateManager $templateManager;
 
-    public function __construct() {
-        global $pdo;
+    public function __construct(PDO $pdo) {
         $this->templateManager = new TemplateManager($pdo);
     }
 

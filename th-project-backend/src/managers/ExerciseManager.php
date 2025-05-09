@@ -1,4 +1,10 @@
 <?php
+namespace App\Managers;
+
+use App\Models\Exercise;
+use PDO;
+use PDOException;
+
 require_once __DIR__ .'/../models/Exercise.php';
 
 class ExerciseManager
@@ -8,6 +14,7 @@ class ExerciseManager
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+
     }
 
     public function getAllExercises(): array

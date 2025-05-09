@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Models;
 class MuscleGroup {
     public $id;
     public $name;

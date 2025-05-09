@@ -1,4 +1,9 @@
 <?php
+namespace App\Managers;
+
+use App\Models\Set;
+use PDO;
+use PDOException;
 require_once __DIR__ . '/../models/Set.php';
 
 class SetManager
@@ -19,7 +24,6 @@ class SetManager
             'rest_time' => $set->getRestTime(),
             'weight' => $set->getWeight(),
             'reps' => $set->getReps(),
-            'exercise_id' => $set->getExerciseId(),
         ]);
     }
 

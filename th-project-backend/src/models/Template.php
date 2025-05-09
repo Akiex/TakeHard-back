@@ -1,4 +1,6 @@
 <?php
+namespace App\Models;
+
 class Template {
     private int $id;
     private int $user_id;

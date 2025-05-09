@@ -1,12 +1,14 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../managers/SetManager.php';
-require_once __DIR__ . '/../models/Set.php';
+namespace App\Controllers;
+
+use App\Managers\SetManager;
+use App\Models\Set;
+use PDO;
+use PDOException;
 class SetController {
     private SetManager $setManager;
 
-    public function __construct() {
-        global $pdo;
+    public function __construct(PDO $pdo) {
         $this->setManager = new SetManager($pdo);
     }
     public function getAllSets() {
@@ -40,12 +42,15 @@ class SetController {
 
     public function updateSet(int $id) {
         $data = json_decode(file_get_contents("php://input"), true);
-        if ($this->setManager->updateSet($id, $data)) {
-            return ["message" => "Entrainement mis à jour avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la mise à jour"];
-        }
+        $existing = $this->setManager->getSetById($id);
+        if (!$existing) { /* 404… */ }
+        // Hydrate l’objet Set existant
+        $existing->setWeight($data['weight'] ?? $existing->getWeight());
+        $existing->setReps($data['reps']     ?? $existing->getReps());
+        $existing->setSets($data['sets']     ?? $existing->getSets());
+        $existing->setRestTime($data['rest_time'] ?? $existing->getRestTime());
+        if ($this->setManager->updateSet($existing)) { /* succès */ }
+        else { /* erreur 500 */ }
     }
 
     public function deleteSet(int $id) {

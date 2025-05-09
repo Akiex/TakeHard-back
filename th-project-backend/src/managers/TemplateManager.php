@@ -1,4 +1,9 @@
 <?php
+namespace App\Managers;
+
+use App\Models\Template;
+use PDO;
+use PDOException;
 require_once __DIR__ . '/../models/Template.php';
 
 class TemplateManager

@@ -1,5 +1,9 @@
 <?php
+namespace App\Managers;
 
+use App\Models\MuscleGroup;
+use PDO;
+use PDOException;
 require_once __DIR__ . '/../models/MuscleGroup.php';
 
 class MuscleGroupManager {

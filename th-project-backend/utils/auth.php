@@ -4,14 +4,15 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-function verifyJWT($token) {
+function verifyJWT($token, $jwtService) {
     try {
-        $decoded = JWT::decode($token, new Key($_ENV['JWT_SECRET'], 'HS256'));
+        $decoded = $jwtService->decode($token); // Décode avec le service Jwt
         return $decoded->user_id; // Retourne l'ID de l'utilisateur
     } catch (Exception $e) {
         return false; // Token invalide
     }
 }
+
 function isAdmin($userId, $pdo) {
     $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
     $stmt->execute([$userId]);
