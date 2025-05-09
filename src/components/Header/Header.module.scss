@@ -1,23 +1,32 @@
 @import "../../styles/variables.scss";
+
 header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  padding: 1em 1em 1em 1em;
-  align-content: center;
+  display: flex;
+  flex-direction: column;  // navBar en dessous du titre
   align-items: center;
-  justify-items: start;
+  padding: 1em;
   background-image: url(./src/assets/BG.jpg);
   background-size: cover;
   background-position: center;
-
   width: 100%;
   border-bottom: solid 1px rgba(0, 0, 0, 0.023);
   color: $white-color;
+
   a {
     text-decoration: none;
     color: $white-color;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
-  a:hover {
-    text-decoration: underline;
+}
+
+// Mobile et tablette : logo + burger côte à côte
+@media (max-width: 1023px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }

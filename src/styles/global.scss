@@ -6,7 +6,13 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Bebas Neue";
+
 }
+
+  main {
+    height:100vh;
+    width:100vw;
+  }
 h1,
 h2,
 h3,
@@ -16,9 +22,7 @@ h4 {
 body {
   background-color: $white-color;
   color: $text-color;
+    height: 100%;
+    width:100vw;
 }
 
-.container {
-  width: 90%;
-  margin: auto;
-}

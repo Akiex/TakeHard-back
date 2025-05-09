@@ -1,7 +1,5 @@
 import { useState } from "react";
 import Button from "../../components/Button/Button";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import styles from "./Login.module.scss";
 
 const Login = () => {
@@ -39,7 +37,6 @@ const Login = () => {
 
   return (
     <div>
-      <Header />
       <h2>Connexion</h2>
       <div className={styles.loginForm}>
         <form onSubmit={handleSubmit}>
@@ -64,7 +61,6 @@ const Login = () => {
           <Button text="Se connecter" variant="secondary" />
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

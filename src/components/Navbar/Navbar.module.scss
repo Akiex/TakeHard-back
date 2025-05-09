@@ -1,9 +1,12 @@
 @import "../../styles/variables.scss";
+
 .navbar {
-  position: relative;
   background-color: $text-color;
   padding: 10px;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .burger {
@@ -20,13 +23,14 @@
   flex-direction: column;
   background-color: #222;
   position: absolute;
-  top: 50px;
+  top: 100%;
   left: 0;
-  width: 33vw;
+  width: 80vw;
+  max-width: 300px;
   padding: 0;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
+  margin-top: 10px;
+  border-radius: 0 0 10px 10px;
+  z-index: 100;
 }
 
 .navMenu.open {
@@ -36,6 +40,7 @@
 .navMenu ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .navMenu li {
@@ -48,43 +53,46 @@
   font-size: 18px;
 }
 
-@media (min-width: 768px) {
-  header {
-    display: flex;
-    flex-direction: column-reverse;
-  }
+/* === Desktop (≥1024px) === */
+@media (min-width: 1024px) {
   .burger {
     display: none;
   }
+
   .navbar {
-    position: sticky;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;         // centré en desktop
     background: none;
   }
+
   .navMenu {
-    display: flex;
+    display: flex !important;
+    position: static;
     flex-direction: row;
-    position: sticky;
     background: none;
-    justify-content: space-around;
-    z-index: 10;
-    ul {
-      display: flex;
-      li {
-        a {
-          margin: 10px;
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 10px;
-          padding: 1em;
-        }
-        a:hover {
-          text-decoration: none;
-          background-color: $darkred-color;
-          box-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
-        }
-      }
-    }
+    width: auto;
+    margin-top: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .navMenu ul {
+    display: flex;
+    gap: 1em;
+  }
+
+  .navMenu li {
+    padding: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  .navMenu li:hover {
+    background-color: $darkred-color;
+    box-shadow: 0 4px 4px rgba(255, 255, 255, 0.25);
+  }
+
+  .navMenu a:hover {
+    text-decoration: none;
   }
 }

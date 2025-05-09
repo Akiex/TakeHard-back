@@ -4,8 +4,9 @@ import Navbar from "../Navbar/Navbar";
 const Header = () => {
   return (
     <header>
+            <h1>Take-Hardvantage</h1>
       <Navbar />
-      <h1>Take-Hardvantage</h1>
+
     </header>
   );
 };

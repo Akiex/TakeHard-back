@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { createUser } from "../../services/api";
 import Button from "../../components/Button/Button";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import styles from "./Register.module.scss";
 
 const Register = () => {
@@ -55,7 +53,6 @@ const Register = () => {
 
   return (
     <div>
-      <Header />
       <h2>Inscription</h2>
       <div className={styles.registerForm}>
         <form onSubmit={handleSubmit}>
@@ -102,7 +99,6 @@ const Register = () => {
           <Button text="S'inscrire" variant="secondary" type="submit" />
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -1,21 +1,40 @@
-@import "../../components/Button/Button.module.scss";
-@import "../../components/Header/Header.module.scss";
-@import "../../components/Footer/Footer.module.scss";
-@import "../../components/Navbar/Navbar.module.scss";
-@import "../../components/Card/Card.module.scss";
 @import "../../styles/variables.scss";
-h2 {
-  text-align: center;
+
+section.Templates,
+section.Exercices {
+  h2 {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .card-list {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    align-items: flex-start;
+
+    // === Mobile (< 768px) : cartes empilées ===
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: center;
+
+      .cardTemplate {
+        flex: 0 0 80vw;   // 80% de la largeur du viewport
+        max-width: 80vw;
+      }
+    }
+
+    // === Tablette et Desktop (>= 768px) : cartes en grille ===
+    @media (min-width: 768px) {
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .cardTemplate {
+        flex: 0 0 20vw;   // 20% du viewport
+        max-width: 20vw;
+        height: 20vh;
+      }
+    }
+  }
 }
-.container {
-  width: 90%;
-  margin: auto;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: rows;
-  justify-content: center;
-  align-items: center;
-}
-section {
-  margin-top: 3em;
-}
+

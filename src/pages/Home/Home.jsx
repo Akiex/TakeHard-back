@@ -1,33 +1,32 @@
 import Button from "../../components/Button/Button";
-import Header from "../../components/Header/Header";
-import Card from "../../components/Card/Card";
-import Footer from "../../components/Footer/Footer";
+import CardWrapper from "../../components/Card/CardWrapper";
+import { useState } from "react";
+
 const Home = () => {
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const handleClick = () => {
     alert("Bouton cliqué !");
   };
 
   return (
-    <div>
-      <Header />
-      <section>
+<>
+      <section className="Templates">
         <h2>Templates à la une</h2>
-        <article className="container">
-          <Card />
-          <Card />
-          <Card />
-        </article>
+        <CardWrapper
+          selectedTemplate={selectedTemplate}
+          setSelectedTemplate={setSelectedTemplate}
+        />
       </section>
-      <section>
-        <h2>Exercice à la une</h2>
-        <article className="container">
-          <Card />
-          <Card />
-          <Card />
-        </article>
+
+      <section className="Exercices">
+        <h2>Exercices à la une</h2>
+        <CardWrapper
+          selectedTemplate={selectedTemplate}
+          setSelectedTemplate={setSelectedTemplate}
+        />
       </section>
-      <Footer />
-    </div>
+    </>
+
   );
 };
 
