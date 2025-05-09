@@ -17,8 +17,8 @@ const Navbar = () => {
           <li>
             <a href="Templates">Mes templates</a>
           </li>
-        </ul>
-        <ul>
+        
+        
           <li>
             <a href="Login">Se Connecter</a>
           </li>

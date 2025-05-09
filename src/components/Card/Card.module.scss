@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 // Container for list of cards
 .card-list {
@@ -22,7 +22,6 @@
     align-items: center;
   }
 }
-
 .cardTemplate {
   position: relative;
   z-index: 0;
@@ -31,12 +30,6 @@
   padding: 1em;
   background-color: $darkred-color;
   color: $white-color;
-
-
-  // mobile card width
-  flex: 0 0 80vw;
-  max-width: 80vw;
-  height: auto;
 
   h4 {
     text-align: center;
@@ -51,43 +44,67 @@
   }
 }
 
-@media (min-width: 768px) {
-  .card-list {
-    flex-wrap: wrap;           // plusieurs par ligne sur desktop
-    overflow-x: visible;
-  }
-
+// Mobile : petit écran
+@media (max-width: 599px) {
   .cardTemplate {
-    flex: 0 0 20vw;           // desktop : 20% viewport
+    flex: 0 0 90%;
+    max-width: 90%;
+    height: auto; // hauteur fluide selon contenu
+  }
+}
+
+// Tablette
+@media (min-width: 600px) and (max-width: 1023px) {
+  .cardTemplate {
+    flex: 0 0 60%;
+    max-width: 60%;
+    height: 25vh; // hauteur intermédiaire
+  }
+}
+
+// Desktop
+@media (min-width: 1024px) {
+  .cardTemplate {
+    flex: 0 0 20vw;
+    max-width: 20vw;
     height: 20vh;
 
     &:hover {
       box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
       cursor: pointer;
-
-
     }
   }
 }
 
+
 .selected {
-  position: absolute;         // absolute inside .card-list
+  position: fixed; // fixe à l'écran
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90vw;
   max-width: 600px;
-  max-height: 80vh;
+  min-height: 80vh;
+
   background-color: $darkred-color;
   z-index: 1000;
   overflow-y: auto;
+
   padding: 2em;
   border: 2px solid $white-color;
   border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 
   .exerciseTitle {
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
   }
 }
