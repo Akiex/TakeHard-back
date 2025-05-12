@@ -1,11 +1,7 @@
 <?php
 namespace App\Managers;
-
 use App\Models\Exercise;
 use PDO;
-use PDOException;
-
-require_once __DIR__ .'/../models/Exercise.php';
 
 class ExerciseManager
 {
@@ -14,7 +10,6 @@ class ExerciseManager
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-
     }
 
     public function getAllExercises(): array
@@ -137,6 +132,4 @@ class ExerciseManager
         $stmt->execute(['userId' => $userId, 'muscleGroupId' => $muscleGroupId, 'templateId' => $templateId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    
 }

@@ -3,12 +3,11 @@ namespace App\Managers;
 
 use App\Models\Template;
 use PDO;
-use PDOException;
-require_once __DIR__ . '/../models/Template.php';
 
 class TemplateManager
 {
     private PDO $pdo;
+
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -16,7 +15,7 @@ class TemplateManager
 
     public function getAllTemplates(): array
     {
-        $sql = "SELECT * FROM templates";
+        $sql = "SELECT id, name, description FROM templates";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -28,7 +27,7 @@ class TemplateManager
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         return $data ? new Template($data) : null;
-    }   
+    }
 
     public function createTemplate(Template $template): bool
     {
@@ -57,15 +56,4 @@ class TemplateManager
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute(['id' => $id]);
     }
-
-    public function getTemplateByName(string $name): ?Template
-    {
-        $sql = "SELECT * FROM templates WHERE name = :name";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['name' => $name]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $data ? new Template($data) : null;
-    }
-
-    
 }

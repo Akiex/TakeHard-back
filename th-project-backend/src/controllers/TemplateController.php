@@ -3,86 +3,89 @@ namespace App\Controllers;
 
 use App\Managers\TemplateManager;
 use App\Models\Template;
-use PDO;
-use PDOException;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../managers/TemplateManager.php';
-require_once __DIR__ . '/../models/Template.php';
-
-class TemplateController {
-    
+class TemplateController
+{
     private TemplateManager $templateManager;
 
-    public function __construct(PDO $pdo) {
-        $this->templateManager = new TemplateManager($pdo);
+    public function __construct(TemplateManager $templateManager)
+    {
+        $this->templateManager = $templateManager;
     }
 
-    // Récupérer tous les templates
-    public function getAllTemplates() {
-        return $this->templateManager->getAllTemplates();
+    public function getAllTemplates(Request $request, Response $response): Response
+    {
+        $templates = $this->templateManager->getAllTemplates();
+        $response->getBody()->write(json_encode($templates));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    // Récupérer un template par ID
-    public function getTemplate(int $id) {
+    public function getTemplate(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
         $template = $this->templateManager->getTemplateById($id);
         if (!$template) {
-            http_response_code(404);
-            return ["message" => "Template non trouvé"];
+            $payload = json_encode(['message' => 'Template non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
-        return $template;
+        $response->getBody()->write(json_encode($template));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    // Créer un template
-    public function createTemplate() {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['name'], $data['description'], $data['user_id'])) {
-            http_response_code(400);
-            return ["message" => "Formulaire incomplet"];
+    public function createTemplate(Request $request, Response $response): Response
+    {
+        $data = (array)$request->getParsedBody();
+        if (empty($data['name']) || empty($data['description'])) {
+            $payload = json_encode(['message' => 'Champs requis manquants']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
         $template = new Template($data);
-        if ($this->templateManager->createTemplate($template)) {
-            http_response_code(201);
-            return ["message" => "Template créé avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la création"];
-        }
+        $this->templateManager->createTemplate($template);
+
+        $payload = json_encode(['message' => 'Template créé avec succès']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }
 
-    // Mettre à jour un template
-    public function updateTemplate(int $id) {
-        $template = $this->templateManager->getTemplateById($id);
-        if (!$template) {
-            http_response_code(404);
-            return ["message" => "Template non trouvé"];
+    public function updateTemplate(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $existingTemplate = $this->templateManager->getTemplateById($id);
+        if (!$existingTemplate) {
+            $payload = json_encode(['message' => 'Template non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['name'], $data['description'])) {
-            http_response_code(400);
-            return ["message" => "Formulaire incomplet"];
-        }
+        $data = (array)$request->getParsedBody();
+        $existingTemplate->setName($data['name'] ?? $existingTemplate->getName());
+        $existingTemplate->setDescription($data['description'] ?? $existingTemplate->getDescription());
 
-        $template->setName($data['name']);
-        $template->setDescription($data['description']);
-        if ($this->templateManager->updateTemplate($template)) {
-            return ["message" => "Template mis à jour avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la mise à jour"];
-        }
+        $this->templateManager->updateTemplate($existingTemplate);
+
+        $payload = json_encode(['message' => 'Template mis à jour']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    // Supprimer un template
-    public function deleteTemplate(int $id) {
-        if ($this->templateManager->deleteTemplate($id)) {
-            http_response_code(200);
-            return ["message" => "Template supprimé avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la suppression"];
+    public function deleteTemplate(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $existingTemplate = $this->templateManager->getTemplateById($id);
+        if (!$existingTemplate) {
+            $payload = json_encode(['message' => 'Template non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
+
+        $this->templateManager->deleteTemplate($id);
+        $payload = json_encode(['message' => 'Template supprimé avec succès']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }

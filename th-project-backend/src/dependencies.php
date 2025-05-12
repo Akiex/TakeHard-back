@@ -1,86 +1,112 @@
 <?php
 use Psr\Container\ContainerInterface;
+use DI\ContainerBuilder;
+use App\Managers\UserManager;
+use App\Managers\ExerciseManager;
+use App\Managers\MuscleGroupManager;
+use App\Managers\SetManager;
+use App\Managers\TemplateManager;
+use App\Services\ValidationService;
+use App\Services\JwtService;
+use App\Error\HttpErrorHandler;
+use Psr\Http\Message\ResponseFactoryInterface;
 
-use Slim\App;
 
-return function(App $app) {
-    $c = $app->getContainer();
 
-    // PDO
-    $c->set('db', function() {
+return [
+    HttpErrorHandler::class => function (ContainerInterface $c) {
+    return new HttpErrorHandler(
+        $c->get(ResponseFactoryInterface::class)
+        // Optionnel : ajouter un logger ici si tu en as un
+        // , $c->get(LoggerInterface::class)
+    );
+},
+    // Paramètres de configuration
+    'settings' => [
+        'db' => [
+            'dsn'     => $_ENV['DB_DSN'],
+            'user'    => $_ENV['DB_USER'],
+            'pass'    => $_ENV['DB_PASS'],
+            'options' => [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ],
+        ],
+        'jwt' => [
+            'secret' => $_ENV['JWT_SECRET'] ?? '',
+        ],
+    ],
+
+    // Service PDO
+    PDO::class => function (ContainerInterface $c) {
+        $db = $c->get('settings')['db'];
         return new PDO(
-            $_ENV['DB_DSN'],
-            $_ENV['DB_USER'],
-            $_ENV['DB_PASS'],
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            $db['dsn'],
+            $db['user'],
+            $db['pass'],
+            $db['options']
         );
-    });
+    },
+    'db' => DI\get(PDO::class),
 
     // Managers
-    $c->set(\App\Managers\UserManager::class, fn(ContainerInterface $c) => new \App\Managers\UserManager($c->get('db')));
-    $c->set(\App\Managers\ExerciseManager::class, fn(ContainerInterface $c) => new \App\Managers\ExerciseManager($c->get('db')));
-    $c->set(\App\Managers\MuscleGroupManager::class, fn(ContainerInterface $c) => new \App\Managers\MuscleGroupManager($c->get('db')));
-    $c->set(\App\Managers\SetManager::class, fn(ContainerInterface $c) => new \App\Managers\SetManager($c->get('db')));
-    $c->set(\App\Managers\TemplateManager::class, fn(ContainerInterface $c) => new \App\Managers\TemplateManager($c->get('db')));
+    UserManager::class => function (ContainerInterface $c) {
+        return new UserManager($c->get('db'));
+    },
+    ExerciseManager::class => function (ContainerInterface $c) {
+        return new ExerciseManager($c->get('db'));
+    },
+    MuscleGroupManager::class => function (ContainerInterface $c) {
+        return new MuscleGroupManager($c->get('db'));
+    },
+    SetManager::class => function (ContainerInterface $c) {
+        return new SetManager($c->get('db'));
+    },
+    TemplateManager::class => function (ContainerInterface $c) {
+        return new TemplateManager($c->get('db'));
+    },
 
     // Services
-    $c->set(\App\Services\ValidationService::class, fn() => new class {
-        public function validate(array $data, array $rules): array {
-            // Implémentation basique de validation (exemple)
-            return [];
-        }
-    });
+    ValidationService::class => function () {
+        return new ValidationService();
+    },
+    JwtService::class => function (ContainerInterface $c) {
+        $secret = $c->get('settings')['jwt']['secret'];
+        return new JwtService($secret);
+    },
 
-    $c->set(\App\Services\JwtService::class, fn() => new class($_ENV['JWT_SECRET']) {
-        private string $secret;
-        public function __construct(string $secret) {
-            $this->secret = $secret;
-        }
-        public function encode(array $payload): string {
-            return base64_encode(json_encode($payload)); // Stub simplifié
-        }
-        public function decode(string $token): array {
-            return json_decode(base64_decode($token), true); // Stub simplifié
-        }
-    });
+    // Controllers (optionnel si auto-wiring activé)
+    App\Controllers\UserController::class => function (ContainerInterface $c) {
+        return new App\Controllers\UserController(
+            $c->get(UserManager::class),
+            $c->get(ValidationService::class)
+        );
+    },
+    App\Controllers\AuthController::class => function (ContainerInterface $c) {
+        return new App\Controllers\AuthController(
+            $c->get(UserManager::class),
+            $c->get(JwtService::class)
+        );
+    },
+    App\Controllers\ExerciseController::class => function (ContainerInterface $c) {
+        return new App\Controllers\ExerciseController(
+            $c->get(ExerciseManager::class),  // Passe directement l'ExerciseManager
+        );
+    },
+    App\Controllers\MuscleGroupController::class => function (ContainerInterface $c) {
+        return new App\Controllers\MuscleGroupController(
+            $c->get(MuscleGroupManager::class)
+        );
+    },
+    App\Controllers\SetController::class => function (ContainerInterface $c) {
+        return new App\Controllers\SetController(
+            $c->get(SetManager::class)
+        );
+    },
+    App\Controllers\TemplateController::class => function (ContainerInterface $c) {
+        return new App\Controllers\TemplateController(
+            $c->get(TemplateManager::class)
+        );
+    },
 
-    // Controllers
-    $c->set(\App\Controllers\UserController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\UserController(
-            $c->get(\App\Managers\UserManager::class),
-            $c->get(\App\Services\ValidationService::class)
-        )
-    );
-
-    $c->set(\App\Controllers\AuthController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\AuthController(
-            $c->get(\App\Managers\UserManager::class),
-            $c->get(\App\Services\JwtService::class)
-        )
-    );
-
-    $c->set(\App\Controllers\ExerciseController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\ExerciseController(
-            $c->get(\App\Managers\ExerciseManager::class),
-            $c->get(\App\Services\ValidationService::class)
-        )
-    );
-
-    $c->set(\App\Controllers\MuscleGroupController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\MuscleGroupController($c->get(\App\Managers\MuscleGroupManager::class)));
-
-    $c->set(\App\Controllers\SetController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\SetController($c->get(\App\Managers\SetManager::class)));
-
-    $c->set(\App\Controllers\TemplateController::class, fn(ContainerInterface $c) =>
-        new \App\Controllers\TemplateController($c->get(\App\Managers\TemplateManager::class)));
-
-    // Error handler
-    $c->set('errorHandler', function() {
-        return function($request, $response, $exception) {
-            error_log($exception->getMessage());
-            $response->getBody()->write(json_encode(['error' => 'Internal Server Error']));
-            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
-        };
-    });
-};
+];

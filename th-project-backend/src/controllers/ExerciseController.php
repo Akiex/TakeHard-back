@@ -3,96 +3,95 @@ namespace App\Controllers;
 
 use App\Managers\ExerciseManager;
 use App\Models\Exercise;
-use App\Models\MuscleGroup;
-use App\Managers\MuscleGroupManager;
-use PDO;
-use App\Services\ValidationService;
-use PDOException;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class ExerciseController {
+class ExerciseController
+{
     private ExerciseManager $exerciseManager;
-    private ValidationService $validationService;
-    public function __construct(PDO $pdo , ValidationService $validationService ) {
-        $this->exerciseManager = new ExerciseManager($pdo);
-        $this->validationService = $validationService;
+
+    public function __construct(ExerciseManager $exerciseManager)
+    {
+        $this->exerciseManager = $exerciseManager;
     }
 
     // Récupérer tous les exercices
-    public function getAllExercises(): array {
-        return $this->exerciseManager->getAllExercises();
+    public function getAllExercises(Request $request, Response $response): Response
+    {
+        $exercises = $this->exerciseManager->getAllExercises();
+        $response->getBody()->write(json_encode($exercises));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     // Récupérer un exercice par ID
-    public function getExercise(int $id) {
+    public function getExercise(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
         $exercise = $this->exerciseManager->getExerciseById($id);
         if (!$exercise) {
-            http_response_code(404);
-            return ["message" => "Exercice non trouvé"];
+            $payload = json_encode(['message' => 'Exercice non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
-        return $exercise;
+        $response->getBody()->write(json_encode($exercise));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     // Créer un nouvel exercice
-    public function createExercise() {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (empty($data['name']) || empty($data['description']) || empty($data['muscleGroupId'])) {
-            http_response_code(400);
-            return ["message" => "Données incomplètes"];
+    public function createExercise(Request $request, Response $response): Response
+    {
+        $data = (array)$request->getParsedBody();
+        if (empty($data['name']) || empty($data['description'])) {
+            $payload = json_encode(['message' => 'Champs requis manquants']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
-        // Instanciation de l'objet Exercise
-        $exercise = new Exercise([
-            'name'           => $data['name'],
-            'description'    => $data['description'],
-            'muscle_group_id'=> $data['muscleGroupId'],
-        ]);
+        $exercise = new Exercise($data);
+        $this->exerciseManager->createExercise($exercise);
 
-        if ($this->exerciseManager->createExercise($exercise)) {
-            http_response_code(201);
-            return ["message" => "Exercice créé avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la création"];
-        }
+        $payload = json_encode(['message' => 'Exercice créé avec succès']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }
 
     // Mettre à jour un exercice existant
-    public function updateExercise(int $id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        // Récupération de l'exercice existant
-        $exercise = $this->exerciseManager->getExerciseById($id);
-        if (!$exercise) {
-            http_response_code(404);
-            return ["message" => "Exercice non trouvé"];
+    public function updateExercise(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $existingExercise = $this->exerciseManager->getExerciseById($id);
+        if (!$existingExercise) {
+            $payload = json_encode(['message' => 'Exercice non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        // Hydratation avec les nouvelles données (si présentes)
-        $exercise->setName($data['name']        ?? $exercise->getName());
-        $exercise->setDescription($data['description'] ?? $exercise->getDescription());
-        $exercise->setMuscleGroupId($data['muscleGroupId'] ?? $exercise->getMuscleGroupId());
+        $data = (array)$request->getParsedBody();
+        $existingExercise->setName($data['name'] ?? $existingExercise->getName());
+        $existingExercise->setDescription($data['description'] ?? $existingExercise->getDescription());
 
-        if ($this->exerciseManager->updateExercise($exercise)) {
-            return ["message" => "Exercice mis à jour avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la mise à jour"];
-        }
+        $this->exerciseManager->updateExercise($existingExercise);
+
+        $payload = json_encode(['message' => 'Exercice mis à jour']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     // Supprimer un exercice
-    public function deleteExercise(int $id) {
-        // Vérifier l'existence
-        if (!$this->exerciseManager->getExerciseById($id)) {
-            http_response_code(404);
-            return ["message" => "Exercice non trouvé"];
+    public function deleteExercise(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $existingExercise = $this->exerciseManager->getExerciseById($id);
+        if (!$existingExercise) {
+            $payload = json_encode(['message' => 'Exercice non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        if ($this->exerciseManager->deleteExercise($id)) {
-            return ["message" => "Exercice supprimé"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la suppression"];
-        }
+        $this->exerciseManager->deleteExercise($id);
+        $payload = json_encode(['message' => 'Exercice supprimé avec succès']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }
+

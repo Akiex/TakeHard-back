@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createUser } from "../../services/api";
 import Button from "../../components/Button/Button";
 import styles from "./Register.module.scss";
+import { API_BASE_URL } from "../../config/apiConfig";
+import { API_ENDPOINTS } from "../../config/apiConfig";
 
 const Register = () => {
   // États pour les champs du formulaire
