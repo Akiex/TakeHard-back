@@ -1,135 +1,127 @@
 <?php
 namespace App\Managers;
+
 use App\Models\Exercise;
+use App\Models\MuscleGroup;
 use PDO;
 
-class ExerciseManager
-{
-    private $pdo;
+class ExerciseManager {
+    private PDO $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
     }
 
-    public function getAllExercises(): array
-    {
-        $sql = "SELECT * FROM exercises";
+    public function getAllExercises(): array {
+        $sql = "
+            SELECT 
+                e.id   AS exercise_id,
+                e.name AS exercise_name,
+                e.description AS exercise_description,
+                mg.id  AS mg_id,
+                mg.name AS mg_name
+            FROM exercises e
+            LEFT JOIN exercise_muscle_groups emg 
+                ON e.id = emg.exercise_id
+            LEFT JOIN muscle_groups mg 
+                ON emg.muscle_group_id = mg.id
+        ";
         $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $exercises = [];
+        foreach ($rows as $row) {
+            $eid = (int)$row['exercise_id'];
+
+            if (!isset($exercises[$eid])) {
+                $exercises[$eid] = new Exercise([
+                    'id'          => $eid,
+                    'name'        => $row['exercise_name'],
+                    'description' => $row['exercise_description'],
+                ]);
+            }
+
+            if ($row['mg_id'] !== null) {
+                $exercises[$eid]->addMuscleGroup(new MuscleGroup([
+                    'id'   => (int)$row['mg_id'],
+                    'name' => $row['mg_name'],
+                ]));
+            }
+        }
+
+        return array_values($exercises);
     }
 
-    public function getExerciseById(int $id): ?Exercise
-    {
+    public function getExerciseById(int $id): ?Exercise {
         $sql = "SELECT * FROM exercises WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $data ? new Exercise($data) : null;
+        if (!$data) {
+            return null;
+        }
+        $exercise = new Exercise($data);
+
+        $sql = "
+            SELECT mg.id, mg.name
+            FROM muscle_groups mg
+            INNER JOIN exercise_muscle_groups emg ON mg.id = emg.muscle_group_id
+            WHERE emg.exercise_id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($groups as $g) {
+            $exercise->addMuscleGroup(new MuscleGroup($g));
+        }
+
+        return $exercise;
     }
 
-    public function createExercise(Exercise $exercise): bool
-    {
-        $sql = "INSERT INTO exercises (name, description) VALUES (:name, :description)";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            'name' => $exercise->getName(),
-            'description' => $exercise->getDescription(),
+    public function createExercise(array $data): Exercise {
+        $stmt = $this->pdo->prepare("INSERT INTO exercises (name, description) VALUES (:name, :description)");
+        $stmt->execute([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
         ]);
+        $exerciseId = (int)$this->pdo->lastInsertId();
+
+        if (!empty($data['muscle_group_ids']) && is_array($data['muscle_group_ids'])) {
+            foreach ($data['muscle_group_ids'] as $mgId) {
+                $stmt = $this->pdo->prepare("INSERT INTO exercise_muscle_groups (exercise_id, muscle_group_id) VALUES (:eid, :mgid)");
+                $stmt->execute(['eid' => $exerciseId, 'mgid' => $mgId]);
+            }
+        }
+
+        return $this->getExerciseById($exerciseId);
     }
 
-    public function updateExercise(Exercise $exercise): bool
-    {
-        $sql = "UPDATE exercises SET name = :name, description = :description WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            'name' => $exercise->getName(),
-            'description' => $exercise->getDescription(),
-            'id' => $exercise->getId(),
+    public function updateExercise(int $id, array $data): ?Exercise {
+        $stmt = $this->pdo->prepare("UPDATE exercises SET name = :name, description = :description WHERE id = :id");
+        $stmt->execute([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'id' => $id,
         ]);
+
+        $stmt = $this->pdo->prepare("DELETE FROM exercise_muscle_groups WHERE exercise_id = :id");
+        $stmt->execute(['id' => $id]);
+
+        if (!empty($data['muscle_group_ids']) && is_array($data['muscle_group_ids'])) {
+            foreach ($data['muscle_group_ids'] as $mgId) {
+                $stmt = $this->pdo->prepare("INSERT INTO exercise_muscle_groups (exercise_id, muscle_group_id) VALUES (:eid, :mgid)");
+                $stmt->execute(['eid' => $id, 'mgid' => $mgId]);
+            }
+        }
+
+        return $this->getExerciseById($id);
     }
 
-    public function deleteExercise(int $id): bool
-    {
-        $sql = "DELETE FROM exercises WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
+    public function deleteExercise(int $id): bool {
+        $stmt = $this->pdo->prepare("DELETE FROM exercise_muscle_groups WHERE exercise_id = :id");
+        $stmt->execute(['id' => $id]);
+
+        $stmt = $this->pdo->prepare("DELETE FROM exercises WHERE id = :id");
         return $stmt->execute(['id' => $id]);
-    }
-
-    public function getExercisesByMuscleGroupId(int $id): array
-    {
-        $sql = "SELECT * FROM exercises WHERE id IN (SELECT exercise_id FROM exercise_muscle_groups WHERE muscle_group_id = :id)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByTemplateId(int $id): array
-    {
-        $sql = "SELECT * FROM exercises WHERE id IN (SELECT exercise_id FROM exercise_templates WHERE template_id = :id)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByWorkoutId(int $id): array
-    {
-        $sql = "SELECT * FROM exercises WHERE id IN (SELECT exercise_id FROM exercise_workouts WHERE workout_id = :id)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByUserId(int $id): array
-    {
-        $sql = "SELECT * FROM exercises WHERE id IN (SELECT exercise_id FROM exercise_users WHERE user_id = :id)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByUserIdAndTemplateId(int $userId, int $templateId): array
-    {
-        $sql = "SELECT exercises.* FROM exercises
-                INNER JOIN exercise_users ON exercises.id = exercise_users.exercise_id
-                INNER JOIN exercise_templates ON exercises.id = exercise_templates.exercise_id
-                WHERE exercise_users.user_id = :userId AND exercise_templates.template_id = :templateId";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['userId' => $userId, 'templateId' => $templateId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByUserIdAndWorkoutId(int $userId, int $workoutId): array
-    {
-        $sql = "SELECT exercises.* FROM exercises
-                INNER JOIN exercise_users ON exercises.id = exercise_users.exercise_id
-                INNER JOIN exercise_workouts ON exercises.id = exercise_workouts.exercise_id
-                WHERE exercise_users.user_id = :userId AND exercise_workouts.workout_id = :workoutId";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['userId' => $userId, 'workoutId' => $workoutId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByUserIdAndMuscleGroupId(int $userId, int $muscleGroupId): array
-    {
-        $sql = "SELECT exercises.* FROM exercises
-                INNER JOIN exercise_users ON exercises.id = exercise_users.exercise_id
-                INNER JOIN exercise_muscle_groups ON exercises.id = exercise_muscle_groups.exercise_id
-                WHERE exercise_users.user_id = :userId AND exercise_muscle_groups.muscle_group_id = :muscleGroupId";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['userId' => $userId, 'muscleGroupId' => $muscleGroupId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getExercisesByUserIdAndMuscleGroupIdAndTemplateId(int $userId, int $muscleGroupId, int $templateId): array
-    {
-        $sql = "SELECT exercises.* FROM exercises
-                INNER JOIN exercise_users ON exercises.id = exercise_users.exercise_id
-                INNER JOIN exercise_muscle_groups ON exercises.id = exercise_muscle_groups.exercise_id
-                INNER JOIN exercise_templates ON exercises.id = exercise_templates.exercise_id
-                WHERE exercise_users.user_id = :userId AND exercise_muscle_groups.muscle_group_id = :muscleGroupId AND exercise_templates.template_id = :templateId";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['userId' => $userId, 'muscleGroupId' => $muscleGroupId, 'templateId' => $templateId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

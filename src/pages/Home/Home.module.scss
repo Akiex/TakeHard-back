@@ -6,7 +6,13 @@ section.Exercices {
     text-align: center;
     margin-bottom: 1em;
   }
-
+.cardTemplate{
+  background-color: $darkred-color;
+  color: $white-color;
+  padding: 1em;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
   .card-list {
     display: flex;
     gap: 1em;

@@ -1,14 +1,16 @@
 <?php
 namespace App\Models;
+
 class MuscleGroup {
-    public $id;
-    public $name;
+    private int $id;
+    private string $name;
+    private array $exercises = []; // Ajout d'une propriété pour stocker les exercices liés à ce groupe musculaire
 
     public function __construct(array $data) {
         $this->hydrate($data);
     }
 
-    private function hydrate(array $data) {
+    private function hydrate(array $data): void {
         foreach ($data as $key => $value) {
             $key = str_replace('_', '', ucwords($key, '_'));
             $method = 'set' . ucfirst($key);
@@ -18,43 +20,29 @@ class MuscleGroup {
         }
     }
 
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
-    {
+    public function getId(): int {
         return $this->id;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @return  self
-     */ 
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of name
-     */ 
-    public function getName()
-    {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @return  self
-     */ 
-    public function setName($name)
-    {
-        $this->name = $name;
+    // Méthode pour ajouter un exercice à ce groupe musculaire
+    public function addExercise(Exercise $exercise): void {
+        $this->exercises[] = $exercise;
+    }
 
-        return $this;
+    // Récupérer la collection d'exercices liés à ce groupe musculaire
+    public function getExercises(): array {
+        return $this->exercises;
+    }
+
+    public function setId(int $id): void {
+        $this->id = $id;
+    }
+
+    public function setName(string $name): void {
+        $this->name = trim($name);
     }
 }

@@ -1,13 +1,29 @@
+export interface MuscleGroup {
+  id: number;
+  name: string;
+}
+
 export interface Exercise {
   id: number;
   name: string;
+  description: string;
+  muscle_groups: MuscleGroup[];
+}
+
+export interface Set {
+  id: number;
+  weight: number;
   sets: number;
   reps: number;
-  rest: number;
+  rest_time: number;
+  exercises: Exercise[];
 }
 
 export interface Template {
   id: number;
-  title: string;
-  exercises: Exercise[];
+  user_id: number;
+  name: string;
+  description: string;
+  is_public: boolean;
+  sets: Set[];
 }

@@ -1,79 +1,108 @@
-<?php 
+<?php
 namespace App\Controllers;
 
 use App\Managers\MuscleGroupManager;
 use App\Models\MuscleGroup;
-use PDO;
-use PDOException;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
-class MuscleGroupController { 
+class MuscleGroupController
+{
     private MuscleGroupManager $muscleGroupManager;
 
-    public function __construct(PDO $pdo) {
-        $this->muscleGroupManager = new MuscleGroupManager($pdo);
+    public function __construct(MuscleGroupManager $muscleGroupManager)
+    {
+        $this->muscleGroupManager = $muscleGroupManager;
     }
 
-    public function getAllMuscleGroups() {
-        return $this->muscleGroupManager->getAllMuscleGroups();
+    public function getAllMuscleGroups(Request $request, Response $response): Response
+    {
+        $muscleGroups = $this->muscleGroupManager->getAllMuscleGroups();
+        $response->getBody()->write(json_encode($muscleGroups));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function getMuscleGroup(int $id) {
+    public function getMuscleGroup(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $muscleGroup = $this->muscleGroupManager->getMuscleGroupById($id);
+
+        if (!$muscleGroup) {
+            $payload = json_encode(['message' => 'Groupe musculaire non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+        $response->getBody()->write(json_encode($muscleGroup));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+public function createMuscleGroup(Request $request, Response $response): Response
+{
+    $data = (array)$request->getParsedBody();
+    if (empty($data['name']) || empty($data['description'])) {
+        $payload = json_encode(['message' => 'Données incomplètes']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+
+    // Création de l'objet MuscleGroup
+    $muscleGroup = new MuscleGroup($data);
+    $muscleGroup->setName($data['name']);
+
+
+    if ($this->muscleGroupManager->createMuscleGroup($muscleGroup)) {
+        $payload = json_encode(['message' => 'Groupe musculaire créé avec succès']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+    } else {
+        $payload = json_encode(['message' => 'Erreur lors de la création']);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+    }
+}
+
+
+    public function updateMuscleGroup(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $data = (array)$request->getParsedBody();
+
         $muscleGroup = $this->muscleGroupManager->getMuscleGroupById($id);
         if (!$muscleGroup) {
-            http_response_code(404);
-            return ["message" => "Groupe musculaire non trouvé"];
-        }
-        return $muscleGroup;
-    }
-
-    public function createMuscleGroup() {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['name'], $data['description'])) {
-            http_response_code(400);
-            return ["message" => "Données incomplètes"];
+            $payload = json_encode(['message' => 'Groupe musculaire non trouvé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        if ($this->muscleGroupManager->createMuscleGroup($data)) {
-            http_response_code(201);
-            return ["message" => "Groupe musculaire créé avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la création"];
-        }
-    }
-
-    public function updateMuscleGroup(int $id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        // 1) Récupérer l’objet existant
-        $mg = $this->muscleGroupManager->getMuscleGroupById($id);
-        if (!$mg) {
-            http_response_code(404);
-            return ["message" => "Groupe musculaire non trouvé"];
-        }
-
-        // 2) Hydrater partiellement
         if (isset($data['name'])) {
-            $mg->setName($data['name']);
+            $muscleGroup->setName($data['name']);
         }
 
-        // 3) Appeler le Manager avec l’objet
-        if ($this->muscleGroupManager->updateMuscleGroup($mg)) {
-            return ["message" => "Groupe musculaire mis à jour avec succès"];
+
+        if ($this->muscleGroupManager->updateMuscleGroup($muscleGroup)) {
+            $payload = json_encode(['message' => 'Groupe musculaire mis à jour avec succès']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json');
         } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la mise à jour"];
+            $payload = json_encode(['message' => 'Erreur lors de la mise à jour']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
 
+    public function deleteMuscleGroup(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
 
-    public function deleteMuscleGroup(int $id) {
         if ($this->muscleGroupManager->deleteMuscleGroup($id)) {
-            return ["message" => "Groupe musculaire supprimé"];
+            $payload = json_encode(['message' => 'Groupe musculaire supprimé']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json');
         } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la suppression"];
+            $payload = json_encode(['message' => 'Erreur lors de la suppression']);
+            $response->getBody()->write($payload);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
     }
-    
 }

@@ -14,11 +14,8 @@ const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => (
     onClick={onSelect}
   >
     <h4>{exercise.name}</h4>
-    <ul>
-      <li>{exercise.sets} séries</li>
-      <li>{exercise.reps} reps</li>
-      <li>{exercise.rest} sec</li>
-    </ul>
+    <p>{exercise.description}</p>
+    <p>Groupe muscluaire: {exercise.muscle_groups[0].name}</p>
   </div>
 );
 

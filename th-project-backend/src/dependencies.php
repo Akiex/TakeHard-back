@@ -90,12 +90,12 @@ return [
     },
     App\Controllers\ExerciseController::class => function (ContainerInterface $c) {
         return new App\Controllers\ExerciseController(
-            $c->get(ExerciseManager::class),  // Passe directement l'ExerciseManager
+            $c->get(ExerciseManager::class),
         );
     },
     App\Controllers\MuscleGroupController::class => function (ContainerInterface $c) {
         return new App\Controllers\MuscleGroupController(
-            $c->get(MuscleGroupManager::class)
+            muscleGroupManager: $c->get(MuscleGroupManager::class),
         );
     },
     App\Controllers\SetController::class => function (ContainerInterface $c) {

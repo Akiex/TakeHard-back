@@ -5,7 +5,7 @@ class Exercise {
     private int $id;
     private string $name;
     private string $description;
-    private int $muscleGroupId;
+    private array $muscleGroups = []; // Tableau pour stocker les groupes musculaires associés
 
     public function __construct(array $data) {
         $this->hydrate($data);
@@ -14,14 +14,13 @@ class Exercise {
     private function hydrate(array $data): void {
         foreach ($data as $key => $value) {
             $formatted = str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
-            $method = 'set' . $formatted;
+            $method = 'set' . ucfirst($formatted);
             if (method_exists($this, $method)) {
                 $this->$method($value);
             }
         }
     }
 
-    // Getters
     public function getId(): int {
         return $this->id;
     }
@@ -34,11 +33,17 @@ class Exercise {
         return $this->description;
     }
 
-    public function getMuscleGroupId(): int {
-        return $this->muscleGroupId;
+    // Méthode pour obtenir la liste des groupes musculaires associés à cet exercice
+    public function getMuscleGroups(): array {
+        return $this->muscleGroups;
     }
 
-    // Setters
+    // Méthode pour ajouter un groupe musculaire à cet exercice
+    public function addMuscleGroup(MuscleGroup $muscleGroup): void {
+
+        $this->muscleGroups[] = $muscleGroup;
+    }
+
     public function setId(int $id): void {
         $this->id = $id;
     }
@@ -51,7 +56,8 @@ class Exercise {
         $this->description = trim($description);
     }
 
-    public function setMuscleGroupId(int $muscleGroupId): void {
-        $this->muscleGroupId = $muscleGroupId;
+    // Méthode pour lier plusieurs groupes musculaires à cet exercice
+    public function setMuscleGroups(array $muscleGroups): void {
+        $this->muscleGroups = $muscleGroups;
     }
 }

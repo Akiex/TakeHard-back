@@ -3,63 +3,127 @@ namespace App\Controllers;
 
 use App\Managers\SetManager;
 use App\Models\Set;
-use PDO;
-use PDOException;
-class SetController {
+use App\Models\Exercise;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+class SetController
+{
     private SetManager $setManager;
 
-    public function __construct(PDO $pdo) {
-        $this->setManager = new SetManager($pdo);
-    }
-    public function getAllSets() {
-        return $this->setManager->getAllSets();
+    public function __construct(SetManager $setManager)
+    {
+        $this->setManager = $setManager;
     }
 
-    public function getSet(int $id) {
-        $set = $this->setManager->getSetById($id);
+    // GET /sets
+    public function getAllSets(Request $request, Response $response): Response
+    {
+        $sets = $this->setManager->getAllSets();
+        $payload = array_map(function(Set $s) {
+            return [
+                'id'         => $s->getId(),
+                'weight'     => $s->getWeight(),
+                'sets'       => $s->getSets(),
+                'reps'       => $s->getReps(),
+                'rest_time'  => $s->getRestTime(),
+                'exercises'  => array_map(function(Exercise $ex) {
+                    return [
+                        'id'   => $ex->getId(),
+                        'name' => $ex->getName(),
+                    ];
+                }, $s->getExercises()),
+            ];
+        }, $sets);
+
+        $response->getBody()->write(json_encode($payload));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    // GET /sets/{id}
+    public function getSet(Request $request, Response $response, array $args): Response
+    {
+        $set = $this->setManager->getSetById((int)$args['id']);
         if (!$set) {
-            http_response_code(404);
-            return ["message" => "Entrainement non trouvé"];
-        }
-        return $set;
-    }
-
-    public function createSet() {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['name'], $data['description'])) {
-            http_response_code(400);
-            return ["message" => "Données incomplètes"];
+            $response->getBody()->write(json_encode(['message' => 'Set non trouvé']));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        if ($this->setManager->createSet($data)) {
-            http_response_code(201);
-            return ["message" => "Entrainement créé avec succès"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la création"];
-        }
+        $data = [
+            'id'         => $set->getId(),
+            'weight'     => $set->getWeight(),
+            'sets'       => $set->getSets(),
+            'reps'       => $set->getReps(),
+            'rest_time'  => $set->getRestTime(),
+            'exercises'  => array_map(fn(Exercise $ex) => [
+                'id'   => $ex->getId(),
+                'name' => $ex->getName()
+            ], $set->getExercises()),
+        ];
+
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function updateSet(int $id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $existing = $this->setManager->getSetById($id);
-        if (!$existing) { /* 404… */ }
-        // Hydrate l’objet Set existant
-        $existing->setWeight($data['weight'] ?? $existing->getWeight());
-        $existing->setReps($data['reps']     ?? $existing->getReps());
-        $existing->setSets($data['sets']     ?? $existing->getSets());
-        $existing->setRestTime($data['rest_time'] ?? $existing->getRestTime());
-        if ($this->setManager->updateSet($existing)) { /* succès */ }
-        else { /* erreur 500 */ }
+    // POST /sets
+    public function createSet(Request $request, Response $response): Response
+    {
+        $data = (array)$request->getParsedBody();
+        $set = $this->setManager->createSet($data);
+
+        $payload = [
+            'id'        => $set->getId(),
+            'weight'    => $set->getWeight(),
+            'sets'      => $set->getSets(),
+            'reps'      => $set->getReps(),
+            'rest_time' => $set->getRestTime(),
+            'exercises' => array_map(fn(Exercise $ex) => [
+                'id'   => $ex->getId(),
+                'name' => $ex->getName()
+            ], $set->getExercises()),
+        ];
+
+        $response->getBody()->write(json_encode($payload));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }
 
-    public function deleteSet(int $id) {
-        if ($this->setManager->deleteSet($id)) {
-            return ["message" => "Entrainement supprimé"];
-        } else {
-            http_response_code(500);
-            return ["message" => "Erreur lors de la suppression"];
+    // PUT /sets/{id}
+    public function updateSet(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)$args['id'];
+        $data = (array)$request->getParsedBody();
+        $set = $this->setManager->updateSet($id, $data);
+        if (!$set) {
+            $response->getBody()->write(json_encode(['message' => 'Set non trouvé']));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
+
+        $payload = [
+            'id'        => $set->getId(),
+            'weight'    => $set->getWeight(),
+            'sets'      => $set->getSets(),
+            'reps'      => $set->getReps(),
+            'rest_time' => $set->getRestTime(),
+            'exercises' => array_map(fn(Exercise $ex) => [
+                'id'   => $ex->getId(),
+                'name' => $ex->getName()
+            ], $set->getExercises()),
+        ];
+
+        $response->getBody()->write(json_encode($payload));
+        return $response->withHeader('Content-Type', 'application/json');
     }
-    
+
+    // DELETE /sets/{id}
+    public function deleteSet(Request $request, Response $response, array $args): Response
+    {
+        $success = $this->setManager->deleteSet((int)$args['id']);
+        if (!$success) {
+            $response->getBody()->write(json_encode(['message' => 'Erreur suppression']));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        }
+
+        $response->getBody()->write(json_encode(['message' => 'Set supprimé avec succès']));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 }
