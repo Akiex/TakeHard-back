@@ -1,106 +1,166 @@
 import { useEffect, useState } from "react";
 import styles from "./BO.module.scss";
 import Button from "../../components/Button/Button";
-import { API_BASE_URL, API_ENDPOINTS, getDefaultHeaders } from "../../config/apiConfig";
+import { API_BASE_URL, API_ENDPOINTS } from "../../config/apiConfig";
+import { apiDelete, apiUpdate } from "../../utils/apiHelper";
+import { User, Template, Exercise } from "../../types/typesCard";
+import { fetchResource } from "../../utils/apiHelper";
+import { UpdateForm } from "../../components/Form/UpdateForm/UpdateForm";
+
+const fieldConfigs = {
+  users: ["first_name", "last_name", "email", "role"],
+  exercises: ["name", "description"],
+  templates: ["name", "description", "is_public"],
+} as const;
+
+type Resource = keyof typeof fieldConfigs;
+
+type FormDataUser = {
+  first_name: string;
+  last_name: string;
+  email: string ;
+  role: string;
+};
+
+type FormDataTemplate = {
+  name: string;
+  description: string;
+  is_public: boolean;
+};
+
+type FormDataExercise = {
+  name: string;
+  description: string;
+};
+
+type FormData = FormDataUser | FormDataTemplate | FormDataExercise;
 
 const BO = () => {
-  const [users, setUsers] = useState([]);
-  const [templates, setTemplates] = useState([]);
-  const [exercices, setExercices] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [exercices, setExercices] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [initialData, setInitialData] = useState<FormData | null>(null);
 
-useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.getAllUsers}`, {
-        method: "GET",
-        headers: getDefaultHeaders(),
-      });
+  // Fonction qui extrait les données initiales selon la ressource
+const getInitialFormData = (item: any): FormData => {
+  if ('first_name' in item && 'last_name' in item && 'email' in item && 'role' in item) {
+    return {
+      first_name: item.first_name ?? "",
+      last_name: item.last_name ?? "",
+      email: item.email ?? "",
+      role: item.role ?? "",
+    };
+  } else if ('is_public' in item) {
+    return {
+      name: item.name ?? "",
+      description: item.description ?? "",  // par défaut ""
+      is_public: item.is_public ?? false,   // par défaut false
+    };
+  } else {
+    return {
+      name: item.name ?? "",
+      description: item.description ?? "",
+    };
+  }
+};
 
-      const text = await response.text();
-      console.log("Réponse brute", text); // Log brute de la réponse
 
-      // Vérifie que la réponse est en JSON
-      if (response.ok) {
-        const contentType = response.headers.get("Content-Type");
-        if (contentType && contentType.includes("application/json")) {
-          const data = JSON.parse(text); // ou response.json() si le type est correct
-          setUsers(data);
-        } else {
-          throw new Error("La réponse n'est pas du JSON valide");
-        }
-      } else {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  const openUpdateModal = (resource: Resource, id: number) => {
+    setSelectedResource(resource);
+    setSelectedId(id);
+
+    let item: User | Template | Exercise | undefined;
+    if (resource === "users") item = users.find((u) => u.id === id);
+    if (resource === "templates") item = templates.find((t) => t.id === id);
+    if (resource === "exercises") item = exercices.find((e) => e.id === id);
+
+    if (item) {
+      setInitialData(getInitialFormData(item));
+      setOpenModal(true);
     }
   };
-  const fetchTemplates = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.getAllTemplates}`, {
-      method: "GET",
-      headers: getDefaultHeaders(),
-    });
 
-    const text = await response.text();
-    console.log("Réponse brute pour les templates:", text);
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
-    if (response.ok) {
-      const contentType = response.headers.get("Content-Type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = JSON.parse(text); // ou response.json() si le type est correct
-        setTemplates(data);
-      } else {
-        throw new Error("La réponse n'est pas du JSON valide");
-      }
-    } else {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+  const fetchUsers = () => fetchResource<User>(`${API_BASE_URL}${API_ENDPOINTS.getAllUsers}`, setUsers, "users");
+  const fetchTemplates = () => fetchResource<Template>(`${API_BASE_URL}${API_ENDPOINTS.getAllTemplates}`, setTemplates, "templates");
+  const fetchExercices = () => fetchResource<Exercise>(`${API_BASE_URL}${API_ENDPOINTS.getAllExercises}`, setExercices, "exercices");
+
+  const fetchData = async (resource: Resource) => {
+    switch (resource) {
+      case "users":
+        return fetchUsers();
+      case "templates":
+        return fetchTemplates();
+      case "exercises":
+        return fetchExercices();
     }
-  } catch (err: any) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-  const fetchExercices = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.getAllExercises}`, {
-      method: "GET",
-      headers: getDefaultHeaders(),
-    });
+  };
 
-    const text = await response.text();
-    console.log("Réponse brute pour les templates:", text);
-
-    if (response.ok) {
-      const contentType = response.headers.get("Content-Type");
-      if (contentType && contentType.includes("application/json")) {
-        const data = JSON.parse(text); // ou response.json() si le type est correct
-        setExercices(data);
-      } else {
-        throw new Error("La réponse n'est pas du JSON valide");
-      }
-    } else {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+  const handleDelete = async (resource: Resource, id: number) => {
+    try {
+      await apiDelete(resource, id);
+      await fetchData(resource);
+    } catch (e: any) {
+      setError(e.message || "Erreur lors de la suppression");
     }
-  } catch (err: any) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-  fetchExercices();
-  fetchTemplates();
-  fetchUsers();
-}, []);
+  };
+
+  const handleSubmitUpdate = async (data: FormData) => {
+    if (!selectedResource || selectedId === null) return;
+
+    let payload: any;
+
+    switch (selectedResource) {
+      case "users":
+        payload = {
+          first_name: (data as FormDataUser).first_name,
+          last_name: (data as FormDataUser).last_name,
+          email: (data as FormDataUser).email,
+          role: (data as FormDataUser).role,
+        };
+        break;
+      case "templates":
+        payload = {
+          name: (data as FormDataTemplate).name,
+          description: (data as FormDataTemplate).description,
+          is_public: (data as FormDataTemplate).is_public,
+        };
+        break;
+      case "exercises":
+        payload = {
+          name: (data as FormDataExercise).name,
+          description: (data as FormDataExercise).description,
+        };
+        break;
+    }
+
+    try {
+      await apiUpdate(selectedResource, selectedId, payload);
+      await fetchData(selectedResource);
+      setOpenModal(false);
+    } catch (e: any) {
+      setError(e.message || "Erreur lors de la mise à jour");
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([fetchUsers(), fetchTemplates(), fetchExercices()])
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className={styles.BO}>
       <main>
+        {/* Section Users */}
         <section>
           <h2>Section User</h2>
           {loading ? (
@@ -111,24 +171,25 @@ useEffect(() => {
             <table>
               <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Actions</th>
+                  <th data-label="Id">Id</th>
+                  <th data-label="First Name">First Name</th>
+                  <th data-label="Last Name">Last Name</th>
+                  <th data-label="Email">Email</th>
+                  <th data-label="Role">Role</th>
+                  <th data-label="Actions">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user: any) => (
+                {users.map((user) => (
                   <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.first_name}</td>
-                    <td>{user.last_name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td>
-                      <Button text="✎" /> <Button text="🗑️" />
+                    <td data-label="Id">{user.id}</td>
+                    <td data-label="First Name">{user.first_name}</td>
+                    <td data-label="Last Name">{user.last_name}</td>
+                    <td data-label="Email">{user.email}</td>
+                    <td data-label="Role">{user.role}</td>
+                    <td data-label="Actions">
+                      <Button text="✎" onClick={() => openUpdateModal("users", user.id)} />{" "}
+                      <Button text="🗑️" onClick={() => handleDelete("users", user.id)} />
                     </td>
                   </tr>
                 ))}
@@ -137,6 +198,7 @@ useEffect(() => {
           )}
         </section>
 
+        {/* Section Templates */}
         <section>
           <h2>Section Template</h2>
           {loading ? (
@@ -147,26 +209,26 @@ useEffect(() => {
             <table>
               <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                  <th></th> {/* Colonne vide */}
-                  <th></th> {/* Colonne vide */}
+                  <th data-label="Id">Id</th>
+                  <th data-label="Name">Name</th>
+                  <th data-label="Description">Description</th>
+                  <th data-label="Actions">Actions</th>
+                  <th></th> {/* empty */}
+                  <th></th> {/* empty */}
                 </tr>
               </thead>
               <tbody>
-                {templates.map((templates: any) => (
-                  <tr key={templates.id}>
-                    <td>{templates.id}</td>
-                    <td>{templates.name}</td>
-                    <td>{templates.description}</td>
-
-                    <td>
-                      <Button text="✎" /> <Button text="🗑️" />
+                {templates.map((template) => (
+                  <tr key={template.id}>
+                    <td data-label="Id">{template.id}</td>
+                    <td data-label="Name">{template.name}</td>
+                    <td data-label="Description">{template.description}</td>
+                    <td data-label="Actions">
+                      <Button text="✎" onClick={() => openUpdateModal("templates", template.id)} />{" "}
+                      <Button text="🗑️" onClick={() => handleDelete("templates", template.id)} />
                     </td>
-                    <td></td> {/* Colonne vide */}
-                    <td></td> {/* Colonne vide */}
+                    <td></td>
+                    <td></td>
                   </tr>
                 ))}
               </tbody>
@@ -174,6 +236,7 @@ useEffect(() => {
           )}
         </section>
 
+        {/* Section Exercises */}
         <section>
           <h2>Section Exercices</h2>
           {loading ? (
@@ -184,33 +247,42 @@ useEffect(() => {
             <table>
               <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                  <th></th> {/* Colonne vide */}
-                  <th></th> {/* Colonne vide */}
+                  <th data-label="Id">Id</th>
+                  <th data-label="Name">Name</th>
+                  <th data-label="Description">Description</th>
+                  <th data-label="Actions">Actions</th>
+                  <th></th> {/* empty */}
+                  <th></th> {/* empty */}
                 </tr>
               </thead>
               <tbody>
-                {templates.map((templates: any) => (
-                  <tr key={templates.id}>
-                    <td>{templates.id}</td>
-                    <td>{templates.name}</td>
-                    <td>{templates.description}</td>
-                    <td>
-                      <Button text="✎" /> <Button text="🗑️" />
+                {exercices.map((exercice) => (
+                  <tr key={exercice.id}>
+                    <td data-label="Id">{exercice.id}</td>
+                    <td data-label="Name">{exercice.name}</td>
+                    <td data-label="Description">{exercice.description}</td>
+                    <td data-label="Actions">
+                      <Button text="✎" onClick={() => openUpdateModal("exercises", exercice.id)} />{" "}
+                      <Button text="🗑️" onClick={() => handleDelete("exercises", exercice.id)} />
                     </td>
-                    <td></td> {/* Colonne vide */}
-                    <td></td> {/* Colonne vide */}
+                    <td></td>
+                    <td></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </section>
-
       </main>
+      {openModal && selectedResource && initialData ? (
+        <UpdateForm
+          open={openModal}
+          onClose={handleClose}
+          initialData={initialData}
+          onSubmit={handleSubmitUpdate}
+          resource={selectedResource}
+        />
+      ) : null}
     </div>
   );
 };

@@ -37,6 +37,9 @@ export const API_ENDPOINTS = {
     updateMuscleGroup: (id: number) => `/muscle_groups/${id}`,
     deleteMuscleGroup: (id: number) => `/muscle_groups/${id}`,
     getAllExercisesByMuscleGroup: (id: number) => `/muscle_groups/${id}/exercises`,
+
+    delete: (ressource: string, id: number) => `/${ressource}/${id}`,
+    update: (ressource: string, id: number) => `/${ressource}/${id}`,
 };
 
 

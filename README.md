@@ -13,3 +13,5 @@ Currently, two official plugins are available:
 Install Slim
 Install Dotenv
 Install PHP-DI
+Install JWT-Decode
+Install MUI

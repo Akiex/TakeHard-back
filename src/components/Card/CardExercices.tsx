@@ -8,15 +8,22 @@ interface Props {
   onSelect: () => void;
 }
 
-const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => (
-  <div
-    className={`${styles.cardExercice} ${isSelected ? styles.selected : ''}`}
-    onClick={onSelect}
-  >
-    <h4>{exercise.name}</h4>
-    <p>{exercise.description}</p>
-    <p>Groupe muscluaire: {exercise.muscle_groups[0].name}</p>
-  </div>
-);
+const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
+  // Sécurisation de l'accès au premier groupe musculaire
+  const firstGroupName = exercise.muscle_groups && exercise.muscle_groups.length > 0
+    ? exercise.muscle_groups[0].name
+    : 'Pas de groupe';
+
+  return (
+    <div
+      className={`${styles.cardExercice} ${isSelected ? styles.selected : ''}`}
+      onClick={onSelect}
+    >
+      <h4>{exercise.name}</h4>
+      <p>{exercise.description}</p>
+      <p>Groupe musculaire: {firstGroupName}</p>
+    </div>
+  );
+};
 
 export default CardExercice;

@@ -1,31 +1,40 @@
 @use "./mixins.scss" as *;
-@use "../pages/Home/Home.module.scss";
 @use "./variables.scss" as *;
+@use "./../pages/Home/Home.module.scss" as *;
+@use "./../pages/BO/BO.module.scss" as *;
+@use "./../pages/Login/Login.module.scss" as *;
+@use "./../pages/Register/Register.module.scss" as *;
+
+/* Reset global */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Bebas Neue";
-
 }
 
-  main {
-    min-height: 100vh;
-    width:100vw;
-    text-align: center;
-  }
-h1,
-h2,
-h3,
-h4 {
+/* Forcer html/body/#root */
+html, body, #root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Ton main */
+main {
+  min-height: 100vh;
+  width: 100%;        // 100%, pas 100vw
+  text-align: center;
+}
+
+/* Titres */
+h1, h2, h3, h4 {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   font-weight: normal;
 }
+
+/* Body global */
 body {
   background-color: $white-color;
   color: $text-color;
-    height: 100vh;
-    width:100vw;
-      overflow-x: hidden;
+  overflow-x: hidden;
 }
-

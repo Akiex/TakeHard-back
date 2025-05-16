@@ -1,31 +1,41 @@
+// File: BO.module.scss
 @use "../../styles/variables.scss" as *;
 
+// Desktop and tablet styles
 .BO table {
+  border: 1px solid #ccc;
   border-collapse: collapse;
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px auto;
+  width: 80%;
+  
+  table-layout: fixed;
   background-color: $white-color;
   color: $text-color;
   border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .BO th,
 .BO td {
-  padding: 10px;
+  padding: .625em;
   text-align: left;
-  border-bottom: 1px solid #ddd;
   font-size: 14px;
-  font-weight: normal;
+  border-bottom: 1px solid #ddd;
   color: $text-color;
 }
 
 .BO th {
   background-color: $darkred-color;
   color: $white-color;
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
   font-weight: bold;
+}
+
+.BO tr {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
 }
 
 .BO tr:nth-child(even) {
@@ -36,11 +46,61 @@
   background-color: #ddd;
 }
 
-.BO a {
-  text-decoration: none;
-  color: $white-color;
+.BO td button {
+  margin: 1em;
 }
 
-.BO a:hover {
-  text-decoration: underline;
+// Mobile styles
+@media screen and (max-width: 600px) {
+  .BO table {
+    border: 0;
+  }
+
+  .BO th,
+  .BO td {
+    display: block;
+    text-align: right;
+    padding: .625em;
+    border-bottom: 1px solid #ddd;
+    font-size: .8em;
+  }
+
+  .BO thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .BO tr {
+    display: block;
+    margin-bottom: .625em;
+    border: 3px solid #ddd;
+  }
+
+  .BO td {
+    border-bottom: 1px solid #ddd;
+  }
+
+  .BO td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .BO td:last-child {
+    border-bottom: 0;
+  }
+}
+
+// Container
+.BackOfficeMain {
+  max-width: 75%;
+  margin: auto;
+  padding: 0 1em;
 }

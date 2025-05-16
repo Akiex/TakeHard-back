@@ -4,6 +4,7 @@ type ButtonProps = {
   text: string;
   onClick?: () => void;
   variant?: "primary" | "secondary" | "danger";
+  type?: "button" | "submit" | "reset";
 };
 
 const Button = ({ text, onClick, variant = "primary" }: ButtonProps) => {

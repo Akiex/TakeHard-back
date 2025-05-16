@@ -43,6 +43,7 @@ class AuthController
         $response->getBody()->write(json_encode([
             'message' => 'Connexion réussie',
             'token' => $token,
+            'is_admin' => $user->getRole() === 'admin',
         ]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
