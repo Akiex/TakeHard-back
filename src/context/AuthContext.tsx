@@ -15,25 +15,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsConnected(true);
-      try {
-        // Décodage pour restaurer isAdmin après reload
-        const decoded: any = JSON.parse(atob(token.split('.')[1]));
-        setIsAdmin(decoded.role === "admin");
-        setUserId(decoded.user_id);
-      } catch {}
-    }
-  }, []);
-
-  const login = (token: string, admin: boolean) => {
-    localStorage.setItem("token", token);
-    setUserId(JSON.parse(atob(token.split('.')[1])).id);
+// AuthContext.tsx
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  console.log("AuthProvider useEffect, token:", token);
+  if (token) {
     setIsConnected(true);
-    setIsAdmin(admin);
-  };
+    try {
+      const decoded: any = JSON.parse(atob(token.split('.')[1]));
+      console.log("Decoded JWT in useEffect:", decoded);
+      setIsAdmin(decoded.role === "admin");
+      setUserId(decoded.user_id);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}, []);
+
+const login = (token: string, admin: boolean) => {
+  console.log("login() called with", token, admin);
+  localStorage.setItem("token", token);
+  setIsConnected(true);
+  setIsAdmin(admin);
+  const decoded: any = JSON.parse(atob(token.split('.')[1]));
+  console.log("Decoded JWT in login():", decoded);
+  setUserId(decoded.user_id);
+};
+
 
   const logout = () => {
     localStorage.removeItem("token");

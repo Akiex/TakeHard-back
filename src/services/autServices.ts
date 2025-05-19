@@ -17,7 +17,7 @@ export const clearSession = () => {
 export const loginService = async (
   email: string,
   password: string
-): Promise<{ token: string; isAdmin: boolean }> => {
+): Promise<{ token: string; isAdmin: boolean; userId: number }> => {
   const response = await fetch(
     `${API_BASE_URL}${API_ENDPOINTS.login}`,
     {
@@ -45,6 +45,6 @@ export const loginService = async (
   // Décodage JWT pour extraire le rôle
   const decoded: any = jwtDecode(token);
   const isAdmin = decoded.role === "admin";
-
-  return { token, isAdmin };
+  const userId = decoded.user_id;
+  return { token, isAdmin, userId };
 };

@@ -1,0 +1,39 @@
+.updateDialog {
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  background-color: #fff;
+
+  .MuiDialogTitle-root {
+    font-weight: bold;
+    font-size: 1.3rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .MuiDialogContent-root {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .dialogForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    .MuiTextField-root {
+      background-color: #f9f9f9;
+      border-radius: 6px;
+    }
+  }
+
+  .dialogActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+
+    button:first-of-type {
+      margin-right: 0.5rem;
+    }
+  }
+}

@@ -15,14 +15,17 @@ const AdminRoute = () => {
 
 const AppRoutes = () => (
   <Routes>
+    {/*Public routes*/}
     <Route path="/" element={<Home />} />
     <Route path="/home" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
-    <Route path="/accountpage/:id" element={<AccountPage />} />
+    {/*Protected routes*/}
     <Route element={<ProtectedRoute />}>
+      <Route path="/accountpage/:id" element={<AccountPage />} />
       <Route path="/BO" element={<BO />} />
     </Route>
+    {/*Catch all routes*/}
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );

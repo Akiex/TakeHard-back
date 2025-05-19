@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { useState } from 'react';
+import styles from "./UpdateForm.module.scss";
 
 const fieldConfigs = {
   users: ["first_name", "last_name", "email", "role"],
@@ -68,29 +69,36 @@ export function UpdateForm<R extends Resource>(props: {
   };
 
   const handleSubmit = () => {
-    onSubmit(formData); // ✅ TypeScript comprend maintenant le lien
+    onSubmit(formData);
     onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Mettre à jour</DialogTitle>
-      <DialogContent>
-        <FormControl fullWidth sx={{ gap: 2, mt: 1 }}>
-          {fieldConfigs[resource].map(field => (
-            <TextField
-              key={field}
-              label={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={(formData as any)[field] ?? ""}
-              onChange={e => handleChange(field, e.target.value)}
-            />
-          ))}
-        </FormControl>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Annuler</Button>
-        <Button variant="contained" onClick={handleSubmit}>Mettre à jour</Button>
-      </DialogActions>
-    </Dialog>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        className={styles.updateDialog}
+      >
+        <DialogTitle>Mettre à jour</DialogTitle>
+        <DialogContent>
+          <form className={styles.dialogForm}>
+            <FormControl fullWidth>
+              {fieldConfigs[resource].map((field) => (
+                <TextField
+                  key={field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={(formData as any)[field] ?? ""}
+                  onChange={(e) => handleChange(field, e.target.value)}
+                  fullWidth
+                />
+              ))}
+            </FormControl>
+          </form>
+        </DialogContent>
+        <DialogActions className={styles.dialogActions}>
+          <Button onClick={onClose}>Annuler</Button>
+          <Button variant="contained" onClick={handleSubmit}>Mettre à jour</Button>
+        </DialogActions>
+      </Dialog>
   );
 };
