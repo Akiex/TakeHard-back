@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CardWrapper from '../../components/Card/CardWrapper';
 import ErrorBoundary  from './../../utils/ErrorBoundary';
+import "./Home.module.scss"
 const Home: React.FC = () => {
 
   return (

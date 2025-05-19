@@ -187,7 +187,13 @@ class TemplateManager
 
         return $this->getTemplateById($id);
     }
-
+    public function getTemplateByUserId(int $userId): array
+    {
+        return array_values(array_filter(
+            $this->getAllTemplates(),
+            fn(Template $t) => $t->getUserId() === $userId
+        ));
+    }
     public function deleteTemplate(int $id): bool
     {
         $this->pdo->prepare("DELETE FROM template_sets WHERE template_id = :id")

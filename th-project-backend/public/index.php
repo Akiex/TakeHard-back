@@ -73,9 +73,11 @@ $app->group('/templates', function (RouteCollectorProxy $group) {
     $group->get('',         App\Controllers\TemplateController::class . ':getAllTemplates');
     $group->post('',        App\Controllers\TemplateController::class . ':createTemplate');
     $group->get('/{id}',    App\Controllers\TemplateController::class . ':getTemplate');
-    $group->put('/{id}',    App\Controllers\TemplateController::class . ':updateTemplate');
+    $group->put('/{id}',    callable: App\Controllers\TemplateController::class . ':updateTemplate');
     $group->delete('/{id}', App\Controllers\TemplateController::class . ':deleteTemplate');
 });
+
+$app->get('/users/{id}/templates', App\Controllers\TemplateController::class . ':getTemplateByUserId');
 
 $app->group('/muscle-groups', function (RouteCollectorProxy $group) {
     $group->get('',         App\Controllers\MuscleGroupController::class . ':getAllMuscleGroups');

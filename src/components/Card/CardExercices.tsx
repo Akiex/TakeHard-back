@@ -9,7 +9,6 @@ interface Props {
 }
 
 const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
-  // Sécurisation de l'accès au premier groupe musculaire
   const firstGroupName = exercise.muscle_groups && exercise.muscle_groups.length > 0
     ? exercise.muscle_groups[0].name
     : 'Pas de groupe';

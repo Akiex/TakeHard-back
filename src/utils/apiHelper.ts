@@ -25,7 +25,6 @@ export async function apiUpdate(resource: string, id: number, payload: any) {
     });
 
     const text = await response.text();
-    console.log(`Réponse brute pour ${label}:`, text);
 
     if (response.ok) {
       const contentType = response.headers.get("Content-Type");

@@ -140,6 +140,38 @@ class TemplateController
         ]));
         return $response->withHeader('Content-Type', 'application/json');
     }
+    
+    public function getTemplateByUserId(Request $request, Response $response, array $args): Response
+    {
+        $userId = (int)$args['id'];
+        $templates = $this->templateManager->getTemplateByUserId($userId);
+
+        $payload = array_map(function(Template $t) {
+            return [
+                'id'          => $t->getId(),
+                'user_id'     => $t->getUserId(),
+                'name'        => $t->getName(),
+                'description' => $t->getDescription(),
+                'is_public'   => $t->getIsPublic(),
+                'sets'        => array_map(function($s) {
+                    return [
+                        'id'         => $s->getId(),
+                        'sets'       => $s->getSets(),
+                        'reps'       => $s->getReps(),
+                        'weight'     => $s->getWeight(),
+                        'rest_time'  => $s->getRestTime(),
+                        'exercises'  => array_map(fn($ex) => [
+                            'id'   => $ex->getId(),
+                            'name' => $ex->getName(),
+                        ], $s->getExercises()),
+                    ];
+                }, $t->getSets()),
+            ];
+        }, $templates);
+
+        $response->getBody()->write(json_encode($payload));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 
     // DELETE /templates/{id}
     public function deleteTemplate(Request $request, Response $response, array $args): Response

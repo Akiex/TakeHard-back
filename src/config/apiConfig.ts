@@ -24,6 +24,9 @@ export const API_ENDPOINTS = {
     getAllTemplates: '/templates',
     createTemplate: '/templates',
     getTemplate: (id: number) => `/templates/${id}`,
+
+    getTemplateByUser: (id: number) => `/users/${id}/templates`,
+    
     updateTemplate: (id: number) => `/templates/${id}`,
     deleteTemplate: (id: number) => `/templates/${id}`,
     getAllWorkouts: '/workouts',

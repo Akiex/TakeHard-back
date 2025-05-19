@@ -160,7 +160,6 @@ const getInitialFormData = (item: any): FormData => {
   return (
     <div className={styles.BO}>
       <main>
-        {/* Section Users */}
         <section>
           <h2>Section User</h2>
           {loading ? (
@@ -198,7 +197,6 @@ const getInitialFormData = (item: any): FormData => {
           )}
         </section>
 
-        {/* Section Templates */}
         <section>
           <h2>Section Template</h2>
           {loading ? (
@@ -213,8 +211,6 @@ const getInitialFormData = (item: any): FormData => {
                   <th data-label="Name">Name</th>
                   <th data-label="Description">Description</th>
                   <th data-label="Actions">Actions</th>
-                  <th></th> {/* empty */}
-                  <th></th> {/* empty */}
                 </tr>
               </thead>
               <tbody>
@@ -236,7 +232,6 @@ const getInitialFormData = (item: any): FormData => {
           )}
         </section>
 
-        {/* Section Exercises */}
         <section>
           <h2>Section Exercices</h2>
           {loading ? (
@@ -251,8 +246,6 @@ const getInitialFormData = (item: any): FormData => {
                   <th data-label="Name">Name</th>
                   <th data-label="Description">Description</th>
                   <th data-label="Actions">Actions</th>
-                  <th></th> {/* empty */}
-                  <th></th> {/* empty */}
                 </tr>
               </thead>
               <tbody>

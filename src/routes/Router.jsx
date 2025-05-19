@@ -5,6 +5,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import BO from "../pages/BO/BO";
 import ProtectedRoute from "../utils/ProtectedRoute";
+import AccountPage from "../pages/Profile/AccountPage";
 
 // Garde uniquement la logique d'accès admin ici
 const AdminRoute = () => {
@@ -18,12 +19,10 @@ const AppRoutes = () => (
     <Route path="/home" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
-
-
+    <Route path="/accountpage/:id" element={<AccountPage />} />
     <Route element={<ProtectedRoute />}>
       <Route path="/BO" element={<BO />} />
     </Route>
-
     <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>
 );

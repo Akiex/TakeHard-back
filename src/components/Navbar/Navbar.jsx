@@ -1,10 +1,12 @@
 import { useState } from "react";
 import styles from "./Navbar.module.scss";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isConnected, isAdmin, logout } = useAuth();
+  const { userId, isConnected, isAdmin, logout } = useAuth();
+  
   return (
     <nav className={styles.navbar}>
       <button className={styles.burger} onClick={() => setIsOpen(!isOpen)}>
@@ -12,17 +14,18 @@ const Navbar = () => {
       </button>
       <div className={`${styles.navMenu} ${isOpen ? styles.open : ""}`}>
         <ul>
-          <li><a href="Home">Home</a></li>
+          <li><Link to="/Home">Home</Link></li>
       {isConnected ? (
         <>
-          <li><a href="Profile">Mon compte</a></li>
-          <li><a onClick={logout}>Se déconnecter</a></li>
-          {isAdmin && <li><a href="BO">Admin</a></li>}
+              <li>
+                <Link to={`/AccountPage/${userId}`}>Mon compte</Link>
+              </li>
+          <li><Link onClick={logout} to="/">Se déconnecter</Link></li>
+          {isAdmin && <li><Link to="/BO">Admin</Link></li>}
         </>
       ) : (
         <>
-          <li><a href="Login">Se connecter</a></li>
-          {/* <li><a href="Register">S'inscrire</a></li> */}
+          <li><Link to="/Login">Se connecter</Link></li>
         </>
       )}
         </ul>
@@ -32,3 +35,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
