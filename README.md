@@ -15,3 +15,4 @@ Install Dotenv
 Install PHP-DI
 Install JWT-Decode
 Install MUI
+Install react-material-ui-carousel

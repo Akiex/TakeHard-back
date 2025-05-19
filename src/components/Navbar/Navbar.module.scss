@@ -23,24 +23,30 @@
   flex-direction: column;
   background-color: #222;
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 80vw;
-  max-width: 300px;
+  width: 100vw;
+  top:0;
+  right:0;
+  max-height:50%;
   padding: 0;
-  margin-top: 10px;
   border-radius: 0 0 10px 10px;
   z-index: 100;
 }
 
 .navMenu.open {
   display: flex;
+  width:100vw;
+  max-height:50%;
 }
 
 .navMenu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    padding: 1.4em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .navMenu li {

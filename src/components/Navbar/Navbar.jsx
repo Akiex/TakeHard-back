@@ -13,8 +13,6 @@ const Navbar = () => {
       <div className={`${styles.navMenu} ${isOpen ? styles.open : ""}`}>
         <ul>
           <li><a href="Home">Home</a></li>
-          <li><a href="Templates">Mes templates</a></li>
-
       {isConnected ? (
         <>
           <li><a href="Profile">Mon compte</a></li>

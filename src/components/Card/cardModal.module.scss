@@ -1,0 +1,21 @@
+@use "../../styles/variables.scss" as *;
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;             // top/right/bottom/left = 0
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;        // bien au-dessus du slider (qui est souvent à 1 ou 1000)
+}
+
+.modalContent {
+  background: $white-color;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 2001;
+} 

@@ -1,8 +1,13 @@
 @use "../../styles/variables.scss" as *;
-
+.home{
+  min-height:100vh;
+}
 section.Templates,
 section.Exercices {
+      min-height:50vh;
+      margin-top:auto;
   h2 {
+
     text-align: center;
     margin-bottom: 1em;
   }

@@ -41,8 +41,8 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
           <h5 className={styles.exerciseTitle}>{exercise.name}</h5>
           <ul className={styles.setList}>
             {sets.map((s) => (
-              <li key={s.id} className={styles.setItem}>
-                {s.sets}×{s.reps} @ {s.weight}kg – repos {s.rest_time}s
+              <li key={s.id} className={styles.setItem} style ={{listStyle: 'none'  }}>
+                {s.sets}×{s.reps} : {s.weight}kg – repos {s.rest_time}s
               </li>
             ))}
           </ul>
