@@ -1,32 +1,79 @@
-@use "../../styles/variables.scss" as *;
+@use "sass:color";
+@use "../../styles/variables.scss" as vars;
 
-header {
-  display: flex;
-  flex-direction: column;  // navBar en dessous du titre
-  align-items: center;
+.header {
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    color.adjust(vars.$darkred-color, $lightness: 5%),
+    vars.$darkred-color
+  );
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1em;
-  background-image: url(./src/assets/BG.jpg);
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  border-bottom: solid 1px rgba(0, 0, 0, 0.023);
-  color: $white-color;
 
-  a {
-    text-decoration: none;
-    color: $white-color;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
-    &:hover {
-      text-decoration: underline;
+  .wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;  // mobile-first : empilé
+    align-items: center;
+    gap: 1em;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
+
+  .title {
+    margin: 0;
+    font-size: 1.75rem;
+    color: vars.$white-color;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.3s, text-shadow 0.3s;
+
+      &:hover {
+        color: vars.$orange-color;
+        text-shadow: 0 0 6px rgba(vars.$orange-color, 0.7);
+      }
     }
   }
 }
 
-// Mobile et tablette : logo + burger côte à côte
-@media (max-width: 1023px) {
-  header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+// Tablette et plus
+@media (min-width: 768px) {
+  .header {
+    padding: 1.5em;
+
+    .wrapper {
+      flex-direction: row;          // côte à côte
+      justify-content: space-between;
+      align-items: center;
+      gap: 2em;
+    }
+
+    .title {
+      font-size: 2rem;
+    }
+  }
+}
+
+// Desktop et plus
+@media (min-width: 1024px) {
+  .header {
+    padding: 2em 0;
+
+    .wrapper {
+      padding: 0 2em;
+    }
+
+    .title {
+      font-size: 2.25rem;
+    }
   }
 }

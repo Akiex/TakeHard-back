@@ -1,3 +1,17 @@
+# React
+build/
+dist/
+node_modules/
 .env
-vendor
-composer.lock
+.npmrc
+*.log
+*.tmp
+.cache/
+
+# PHP
+vendor/
+.env
+*.local.php
+*.log
+*.tmp
+cache/

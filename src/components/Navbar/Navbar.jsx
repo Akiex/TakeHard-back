@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isConnected, isAdmin, logout, userId } = useAuth();
-  console.log("🏷️ Navbar context:", { isConnected, isAdmin, userId });
   return (
     <nav className={styles.navbar}>
-      <button className={styles.burger} onClick={() => setIsOpen(!isOpen)}>
-        &#9776;
+      <button
+        className={`${styles.burger} ${isOpen ? styles.open : ""}`}
+        onClick={() => setIsOpen(!isOpen)}>
+        <span aria-hidden="true"></span>
       </button>
       <div className={`${styles.navMenu} ${isOpen ? styles.open : ""}`}>
         <ul>
