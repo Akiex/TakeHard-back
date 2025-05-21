@@ -5,9 +5,9 @@ import "./Home.module.scss"
 const Home: React.FC = () => {
 
   return (
-    <section className='home'>
+    <section className='home twelve'>
       <ErrorBoundary>
-      <h2 style={{ textAlign: 'center', marginBottom: '1em', marginTop: '1em', textTransform: 'uppercase' }}>Les derniers templates et exercices</h2>
+      <h2 className="title">Les derniers templates et exercices</h2>
       <article className="Templates">
         <h2>Templates à la une</h2>
         <CardWrapper

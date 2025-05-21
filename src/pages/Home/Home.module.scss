@@ -1,56 +1,102 @@
 @use "../../styles/variables.scss" as *;
-.home{
-  min-height:100vh;
-    article{
 
-    padding:1.5em;
+.home {
+  min-height: 100vh;
+
+  article {
+    padding: 1.5em;
   }
-}
-section.Templates,
-section.Exercices {
-      min-height:50vh;
-      margin-top:auto;
-  h2 {
 
+  .title {
+    position: relative;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 2em auto 1em;
+    padding-bottom: 13px;
     text-align: center;
-    margin-bottom: 1em;
-  }
+    color: $darkred-color;
+    font-family: "Bebas Neue", sans-serif;
+    width: fit-content;
 
-.cardTemplate{
-  background-color: $darkred-color;
-  color: $white-color;
-  padding: 1em;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-}
-  .card-list {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-    align-items: flex-start;
-
-    // === Mobile (< 768px) : cartes empilées ===
-    @media (max-width: 767px) {
-      flex-direction: column;
-      align-items: center;
-
-      .cardTemplate {
-        flex: 0 0 80vw;   // 80% de la largeur du viewport
-        max-width: 80vw;
-      }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      height: 3px;
+      width: 75px;
+      background-color: $darkred-color;
+      margin: 0 auto 5px;
     }
 
-    // === Tablette et Desktop (>= 768px) : cartes en grille ===
+    &::after {
+      margin-top: 5px;
+    }
+
+    @media (min-width: 768px) {
+      font-size: 28px;
+    }
+  }
+}
+
+section.Templates,
+section.Exercices {
+  min-height: 50vh;
+  margin-top: auto;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1em;
+    color: $darkred-color;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 26px;
+
+    @media (min-width: 768px) {
+      font-size: 32px;
+    }
+  }
+
+  .cardTemplate {
+    background-color: $darkred-color;
+    color: $white-color;
+    padding: 1em;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    font-family: "Jura", sans-serif;
+    text-align: center;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 0 1em;
+
+    .cardTemplate {
+      flex: 0 0 80vw;
+      max-width: 80vw;
+    }
+
     @media (min-width: 768px) {
       flex-direction: row;
       flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
 
       .cardTemplate {
-        flex: 0 0 20vw;   // 20% du viewport
+        flex: 0 0 20vw;
         max-width: 20vw;
         height: 20vh;
+
+        &:hover {
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          transform: translateY(-4px);
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
       }
     }
   }
 }
-

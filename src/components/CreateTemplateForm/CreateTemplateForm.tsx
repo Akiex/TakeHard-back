@@ -1,7 +1,7 @@
 import React, { useEffect, useState, FormEvent } from "react";
 import { API_BASE_URL, API_ENDPOINTS } from "../../config/apiConfig";
 import { Template, Exercise, Set } from "../../types/typesCard";
-import styles from "./../../pages/Profile/AccountPage.module.scss";
+import styles from "./CreateTemplateForm.module.scss";
 
 interface Entry {
   exerciseId: number;

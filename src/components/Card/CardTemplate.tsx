@@ -8,6 +8,34 @@ interface Props {
   onSelect: () => void;
 }
 
+// Amplitudes moyennes estimées par exercice (en mètres)
+const amplitudes: Record<string, number> = {
+  'Tractions pronation': 0.4,
+  'Curl biceps':         0.3,
+  'Soulevé de terre':    0.6,
+  'Rowing barre':        0.5,
+  'Hip Thrust':          0.30,
+  'Presse inclinée':     0.60,
+};
+
+const efficience = 0.15;    // on baisse pour augmenter l’estimation
+const gravite = 9.81;
+
+function calcCalories(
+  weightKg: number,
+  reps: number,
+  setsCount: number,
+  amplitudeM: number,
+  overhead = 1.7         // facteur à ajuster entre 1.5 et 2
+) {
+  const force = weightKg * gravite;  
+  const travail = force * amplitudeM * reps * setsCount;
+  const depenseEnergieJ = travail / efficience;
+  const depenseKcal = depenseEnergieJ / 4184;
+  return depenseKcal * overhead;
+}
+
+
 const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
   if (!template || !template.sets?.length) {
     return <div>Aucune donnée à afficher.</div>;
@@ -26,6 +54,9 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
 
   const exercisesWithSets = Object.values(exerciseMap);
 
+  // Calcul total calories séance
+  let totalCalories = 0;
+
   return (
     <div
       className={` ${isSelected ? styles.selected : ''}`}
@@ -34,18 +65,32 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
       <h4>{template.name}</h4>
       <p>{template.description}</p>
 
-      {exercisesWithSets.map(({ exercise, sets }) => (
-        <div key={exercise.id} className={styles.exerciseBlock}>
-          <h5 className={styles.exerciseTitle}>{exercise.name}</h5>
-          <ul className={styles.setList}>
-            {sets.map((s) => (
-              <li key={s.id} className={styles.setItem} style ={{listStyle: 'none'  }}>
-                {s.sets}×{s.reps} : {s.weight}kg – repos {s.rest_time}s
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {exercisesWithSets.map(({ exercise, sets }) => {
+        // Amplitude estimée ou fallback
+        const amplitudeM = amplitudes[exercise.name] ?? 0.4;
+
+        // Calcul calories total pour cet exercice (somme des sets)
+        const caloriesExercice = sets.reduce((acc, s) => {
+          return acc + calcCalories(s.weight, s.reps, s.sets, amplitudeM);
+        }, 0);
+
+        totalCalories += caloriesExercice;
+
+        return (
+          <div key={exercise.id} className={styles.exerciseBlock}>
+            <h5 className={`${styles.test}`}>{exercise.name}</h5>
+              <ul className={` ${styles.setList} ${styles.test}`}>
+              {sets.map((s) => (
+                <li key={s.id} className={styles.setItem} style={{ listStyle: 'none' }}>
+                  {s.sets}×{s.reps} : {s.weight}kg – repos {s.rest_time}s
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+
+      <h5>Total dépense estimée séance : {totalCalories.toFixed(2)} kcal</h5>
     </div>
   );
 };

@@ -1,0 +1,191 @@
+@use "sass:color";
+@use "../../styles/variables.scss" as vars;
+
+.formContainer {
+  width: 100%;
+  padding: 1em;
+  box-sizing: border-box;
+  color: var(--text-color);
+
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 0.75em;
+  }
+
+  form {
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5em;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+
+    div {
+      margin-bottom: 1em;
+
+      label {
+        display: block;
+        margin-bottom: 0.3em;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-color);
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        width: 100%;
+        padding: 0.6em;
+        border: 1px solid var(--footer-icon-hover);
+        border-radius: 5px;
+        font-size: 0.9rem;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+
+        &:focus {
+          border-color: var(--footer-icon-hover);
+          outline: none;
+          box-shadow: 0 0 4px rgba(251, 33, 5, 0.3);
+        }
+      }
+
+      input[type="checkbox"] {
+        margin-right: 0.4em;
+        vertical-align: middle;
+      }
+
+      textarea {
+        min-height: 4em;
+        resize: vertical;
+      }
+    }
+
+    .exerciseBlock {
+      padding: 1em;
+      margin-bottom: 1em;
+      background-color: var(--bg-color);
+      border: 1px solid var(--footer-hr);
+      border-radius: 5px;
+      box-sizing: border-box;
+
+      select {
+        margin-bottom: 0.75em;
+      }
+
+      div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+
+        label {
+          flex: 1 1 40%;
+          margin-bottom: 0;
+        }
+
+        input[type="number"] {
+          flex: 1 1 50%;
+        }
+      }
+
+      button {
+        display: block;
+        margin: 0.75em 0 0;
+        padding: 0.5em;
+        background: var(--surface-light);
+        color: var(--footer-icon-hover);
+        font-size: 0.85rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: var(--footer-hr);
+        }
+      }
+    }
+
+    button[type="button"],
+    button[type="submit"] {
+      display: block;
+      width: 100%;
+      padding: 0.75em;
+      margin-top: 0.75em;
+      background: linear-gradient(
+        to bottom,
+        #6f1519,
+        var(--footer-icon-hover)
+      );
+      color: var(--footer-icon-color);
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s, transform 0.1s;
+
+      &:hover {
+        background: linear-gradient(
+          to bottom,
+          #7f1a1f,
+          #68100d
+        );
+      }
+
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+
+  @media (min-width: 600px) {
+    form {
+      padding: 2em;
+    }
+  }
+
+  body.dark-mode & {
+    color: var(--text-color);
+
+    form {
+      background-color: var(--bg-color);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+
+      div {
+        label {
+          color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+          background-color: var(--footer-icon-bg);
+          color: var(--footer-icon-color);
+          border-color: var(--surface-light);
+        }
+      }
+
+      .exerciseBlock {
+        background-color: var(--footer-icon-bg);
+        border-color: var(--surface-light);
+      }
+
+      button[type="button"],
+      button[type="submit"] {
+        background: linear-gradient(
+          to bottom,
+          #ccc,
+          var(--footer-icon-color)
+        );
+        color: var(--bg-color);
+      }
+    }
+  }
+}

@@ -6,7 +6,8 @@ import Register from "../pages/Register/Register";
 import BO from "../pages/BO/BO";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import AccountPage from "../pages/Profile/AccountPage";
-
+import TermsOfUse from "../pages/TermsOfUse/TermsOfUse";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
 // Garde uniquement la logique d'accès admin ici
 const AdminRoute = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,6 +21,8 @@ const AppRoutes = () => (
     <Route path="/home" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
+    <Route path="/conditions-generales" element={<TermsOfUse />} />
+    <Route path="/confidentialite" element={<PrivacyPolicy />} />
     {/*Protected routes*/}
     <Route element={<ProtectedRoute />}>
       <Route path="/accountpage/:id" element={<AccountPage />} />

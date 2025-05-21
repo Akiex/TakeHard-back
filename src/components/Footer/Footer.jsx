@@ -22,7 +22,7 @@ const Footer = () => {
 
           {/* Colonne 2 - Entreprise */}
           <div className={styles.section}>
-            <h4>Entreprise</h4>
+            <h5>Entreprise</h5>
             <ul>
               <li><a href="#">À propos</a></li>
               <li><a href="#">Fonctionnalités</a></li>
@@ -33,12 +33,12 @@ const Footer = () => {
 
           {/* Colonne 3 - Aide */}
           <div className={styles.section}>
-            <h4>Aide</h4>
+            <h5>Aide</h5>
             <ul>
               <li><a href="#">Support client</a></li>
               <li><a href="#">Livraison</a></li>
-              <li><a href="#">Conditions générales</a></li>
-              <li><a href="#">Confidentialité</a></li>
+              <li><a href="/conditions-generales">Conditions générales</a></li>
+              <li><a href="/confidentialite">Confidentialité</a></li>
             </ul>
           </div>
         </div>

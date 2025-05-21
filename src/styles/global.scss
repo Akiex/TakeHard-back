@@ -6,36 +6,305 @@
 @use "./../pages/Register/Register.module.scss" as *;
 @use "./../pages/Profile/AccountPage.module.scss" as *;
 
-/* Reset global */
+/* ...ton reset et styles existants ... */
+
+/* 1.2. Déclaration des CSS vars en light mode */
+:root {
+  --bg-color: #{$white-color};
+  --text-color: #{$text-color};
+  --surface-light: #{$surface-light};
+  --gray-color: #{$gray-color};
+  --footer-bg: #{$white-color};
+  --footer-text: #{$text-color};
+  --footer-hr: #{$surface-light};
+  --footer-meta: #{$gray-color};
+  --footer-icon-bg: #{$background-dark};
+  --footer-icon-color: #{$white-color};
+  --footer-icon-hover: #{$darkorange-color};
+}
+
+/* 1.3. Override pour dark mode */
+body.dark-mode {
+  --bg-color: #{$background-dark};
+  --text-color: #{$white-color};
+  --surface-light: #{$darkorange-color};
+  --gray-color: #{$gray-color};
+  --footer-bg: #{$background-dark};
+  --footer-text: #{$white-color};
+  --footer-hr: #{$darkorange-color};
+  --footer-meta: #{$gray-color};
+  --footer-icon-bg: #{$white-color};
+  --footer-icon-color: #{$background-dark};
+  --footer-icon-hover: #{$orange-color};
+}
+
+/* ------------------------- */
+/*       RESET GLOBAL        */
+/* ------------------------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Bebas Neue";
 }
 
-/* Forcer html/body/#root */
+/* ------------------------- */
+/*     STRUCTURE GÉNÉRALE    */
+/* ------------------------- */
 html, body, #root {
   width: 100vw;
   height: 100vh;
 }
 
-/* Ton main */
-main {
-  min-height: 100vh;
-  width: 100%;        // 100%, pas 100vw
-  text-align: center;
-}
-
-/* Titres */
-h1, h2, h3, h4 {
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-  font-weight: normal;
-}
-
-/* Body global */
 body {
   background-color: $white-color;
   color: $text-color;
+  font-family: "Jura", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   overflow-x: hidden;
+
+}
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+/* ------------------------- */
+/*         TITRES            */
+/* ------------------------- */
+
+h1, h2, h3,h4,h5 {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: normal;
+  color: $darkred-color;
+  letter-spacing: 0.5px;
+}
+h4,h5{
+  color: $darkred-color;
+
+
+  text-shadow:
+    2px 2px 0 $white-color,
+    2px -2px 0 $white-color,
+    -2px 2px 0 $white-color,
+    -2px -2px 0$white-color,
+    2px 0px 0 $white-color,
+    0px 2px 0 $white-color,
+    -2px 0px 0 $white-color,
+    0px -2px 0 $white-color,
+  ;
+  padding: 0.5em;
+  text-align: center;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+/* ------------------------- */
+/*        SECTIONS           */
+/* ------------------------- */
+main {
+  min-height: 100vh;
+  width: 100%;
+  text-align: center;
+  background-color: $white-color;
+  color: $text-color;
+}
+
+/* ------------------------- */
+/*   TEXTE SECONDAIRE, etc.  */
+/* ------------------------- */
+small,
+.secondary-text {
+  font-size: 13px;
+  color: $darkorange-color;
+  font-family: "Jura", sans-serif;
+}
+
+/* ------------------------- */
+/*     NOUVELLES VARIABLES   */
+/* ------------------------- */
+/* Utilisables dans tes composants : */
+.separator {
+  background-color: $surface-light;
+  height: 1px;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.bg-invert {
+  background-color: $background-dark;
+  color: $white-color;
+}
+
+.text-muted {
+  color: $gray-color;
+}
+
+/* ------------------------- */
+/*     RESPONSIVE DESKTOP    */
+/* ------------------------- */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 22px;
+  }
+
+  h4 {
+    font-size: 20px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  small,
+  .secondary-text {
+    font-size: 14px;
+  }
+}
+/* ------------------------- */
+/*        DARK MODE          */
+/* ------------------------- */
+body.dark-mode {
+  background-color: $background-dark;
+  color: $white-color;
+  form {
+    background-color: $background-dark;
+    color: $white-color;
+
+    /* inputs, labels, textarea, etc. */
+    input,
+    textarea,
+    select {
+      background-color: darken($background-dark, 5%);
+      color: $white-color;
+      border-color: $surface-light;
+    }
+
+    label,div {
+      color: $white-color;
+    }
+  }
+
+  /* override pour TOUTES les tables */
+  table {
+    background-color: darken($background-dark, 2%);
+    color: $white-color;
+    border-color: $surface-light;
+  }
+
+  /* lignes de tableau */
+  th,
+  td,
+  tr {
+    background-color: darken($background-dark, 2%);
+    color: $white-color;
+    border: 1px solid $surface-light;
+  }
+  main {
+    background-color: $background-dark;
+    color: $white-color;
+  }
+
+  h1, h2, h3, h4, h5 {
+    color: $orange-color;
+    text-shadow: none;
+  }
+
+  .separator {
+    background-color: $darkorange-color;
+  }
+
+  .bg-invert {
+    background-color: $white-color;
+    color: $background-dark;
+  }
+
+  .text-muted,
+  small,
+  .secondary-text {
+    color: $gray-color;
+  }
+
+  .dark-toggle {
+    border-color: $white-color;
+    color: $white-color;
+  }
+  body.dark-mode .footer {
+  background-color: $background-dark;
+  color: $white-color;
+
+  .brand .description,
+  .copyright {
+    color: $gray-color;
+  }
+
+  .socials .icon {
+    background: $white-color;
+    color: $background-dark;
+
+    &:hover {
+      background: $orange-color;
+      color: $white-color;
+    }
+  }
+
+  .section {
+    h4 {
+      color: $surface-light;
+    }
+
+    ul li a {
+      color: $white-color;
+
+      &:hover {
+        color: $orange-color;
+      }
+    }
+  }
+
+  hr {
+    border-top: 1px solid $darkorange-color;
+  }
+}
+
+}
+.dark-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 2px solid $text-color;
+  color: $text-color;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 999;
 }

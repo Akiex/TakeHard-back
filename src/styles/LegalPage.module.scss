@@ -1,0 +1,84 @@
+@use "./../styles/variables.scss" as *;
+
+.legalPage {
+  padding: 20px;
+  font-family: "Jura", sans-serif;
+  background-color: $white-color;
+  color: $text-color;
+  font-size: 16px;
+  line-height: 1.6;
+
+  h1 {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 32px;
+    color: $orange-color;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: 24px;
+    color: $darkorange-color;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    font-family: "Jura", sans-serif;
+  }
+
+  h3 {
+    font-size: 20px;
+    margin-top: 24px;
+    margin-bottom: 10px;
+    font-family: "Jura", sans-serif;
+    color: $darkred-color;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 16px;
+
+    li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+  }
+
+  a {
+    color: $orange-color;
+    text-decoration: underline;
+
+    &:hover {
+      color: $darkorange-color;
+    }
+  }
+
+  @media (min-width: 768px) {
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+
+    h1 {
+      font-size: 36px;
+    }
+
+    h2 {
+      font-size: 28px;
+    }
+
+    h3 {
+      font-size: 22px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    li {
+      font-size: 14px;
+    }
+  }
+}

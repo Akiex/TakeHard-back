@@ -37,12 +37,12 @@ const AccountPage = () => {
     <div className={styles.containerAccountPage}>
       <h1>Profil de l'utilisateur</h1>
 
-      <section>
+      
       <CreateTemplateForm
         userId={Number(id)}
         onCreated={(tpl) => setTemplates((prev) => [...prev, tpl])}
       />
-      </section>
+
 
       <section className={styles.templatesList}>
         {loading ? (
