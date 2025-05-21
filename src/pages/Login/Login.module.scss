@@ -1,33 +1,88 @@
-@use "../../styles/variables.scss" as *;
+@use "sass:color";
+@use "../../styles/variables.scss" as vars;
+
 .loginForm {
+  margin: 0;
+  margin-top: 10%;
+  color: vars.$text-color;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
   form {
     max-width: 400px;
     margin: 0 auto;
     padding: 2em;
-    background-color: #f9f9f9;
+    background-color: vars.$white-color;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* relief léger */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
 
     label {
       display: block;
       margin-bottom: 0.5em;
       font-weight: bold;
+      color: vars.$text-color;
     }
 
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 0.5em;
+      padding: 0.75em;
       margin-bottom: 1em;
-      border: 1px solid #ccc;
+      border: 1px solid color.adjust(vars.$darkred-color, $lightness: 20%);
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+
+      &:focus {
+        border-color: vars.$darkred-color;
+        outline: none;
+        box-shadow: 0 0 4px rgba(vars.$darkred-color, 0.3);
+      }
     }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: $darkred-color;
-      outline: none;
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75em;
+      margin-top: 1em;
+      background: linear-gradient(
+        to bottom,
+        color.adjust(vars.$darkred-color, $lightness: 10%),
+        vars.$darkred-color
+      );
+      color: vars.$white-color;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s, transform 0.1s;
+
+      &:hover {
+        background: linear-gradient(
+          to bottom,
+          color.adjust(vars.$darkred-color, $lightness: 15%),
+          color.adjust(vars.$darkred-color, $lightness: 2%)
+        );
+      }
+
+      &:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  a {
+    display: inline-block;
+    margin-top: 0.5em;
+    text-decoration: none;
+    color: vars.$darkred-color;
+    transition: color 0.3s, text-shadow 0.3s;
+
+    &:hover {
+      color: vars.$orange-color;
+      text-shadow: 0 0 6px rgba(vars.$orange-color, 0.7);
     }
   }
 }

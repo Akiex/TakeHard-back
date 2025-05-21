@@ -55,8 +55,9 @@ const Register = () => {
 
   return (
     <div>
-      <h2>Inscription</h2>
+
       <div className={styles.registerForm}>
+              <h2>Inscription</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="firstName">Prénom :</label>
           <input
