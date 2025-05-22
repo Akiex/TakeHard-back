@@ -8,7 +8,6 @@ import ProtectedRoute from "../utils/ProtectedRoute";
 import AccountPage from "../pages/Profile/AccountPage";
 import TermsOfUse from "../pages/TermsOfUse/TermsOfUse";
 import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
-// Garde uniquement la logique d'accès admin ici
 const AdminRoute = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return user?.role === "admin" ? <Outlet /> : <Navigate to="/login" />;

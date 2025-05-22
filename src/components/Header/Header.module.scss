@@ -19,7 +19,7 @@
     margin: 0 auto;
     padding: 0 1em;
     display: flex;
-    flex-direction: column;  // mobile-first : empilé
+    flex-direction: column;
     align-items: center;
     gap: 1em;
     position: relative;
@@ -51,7 +51,7 @@
     padding: 1.5em;
 
     .wrapper {
-      flex-direction: row;          // côte à côte
+      flex-direction: row;
       justify-content: space-between;
       align-items: center;
       gap: 2em;

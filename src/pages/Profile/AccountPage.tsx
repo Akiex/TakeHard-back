@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { API_BASE_URL, API_ENDPOINTS } from "../../config/apiConfig";
 import { Template } from "../../types/typesCard";
 import styles from "./AccountPage.module.scss";
-import UserTemplateCard from './UserTemplateCard/UserTemplateCard';
+import UserTemplateCard from "./UserTemplateCard/UserTemplateCard";
 import CreateTemplateForm from "../../components/CreateTemplateForm/CreateTemplateForm";
 const AccountPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +17,8 @@ const AccountPage = () => {
         const response = await fetch(
           `${API_BASE_URL}${API_ENDPOINTS.getTemplateByUser(Number(id))}`
         );
-        if (!response.ok) throw new Error("Erreur lors du chargement des templates.");
+        if (!response.ok)
+          throw new Error("Erreur lors du chargement des templates.");
         const data = await response.json();
         console.log("data", data);
         setTemplates(Array.isArray(data) ? data : []);
@@ -37,12 +38,10 @@ const AccountPage = () => {
     <div className={styles.containerAccountPage}>
       <h1>Profil de l'utilisateur</h1>
 
-      
       <CreateTemplateForm
         userId={Number(id)}
         onCreated={(tpl) => setTemplates((prev) => [...prev, tpl])}
       />
-
 
       <section className={styles.templatesList}>
         {loading ? (
@@ -55,8 +54,11 @@ const AccountPage = () => {
               key={template.id}
               template={template}
               isSelected={selected?.id === template.id}
-              onSelect={() => 
-                setSelected(prev => prev?.id === template.id ? null : template)}
+              onSelect={() =>
+                setSelected((prev) =>
+                  prev?.id === template.id ? null : template
+                )
+              }
             />
           ))
         )}

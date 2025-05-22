@@ -10,12 +10,15 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <button
         className={`${styles.burger} ${isOpen ? styles.open : ""}`}
-        onClick={() => setIsOpen(!isOpen)}>
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <span aria-hidden="true"></span>
       </button>
       <div className={`${styles.navMenu} ${isOpen ? styles.open : ""}`}>
         <ul>
-          <li><Link to="/home">Home</Link></li>
+          <li>
+            <Link to="/home">Home</Link>
+          </li>
           {isConnected ? (
             <>
               {userId != null && (
@@ -24,14 +27,20 @@ const Navbar = () => {
                 </li>
               )}
               <li>
-                <Link onClick={logout} to="/">Se déconnecter</Link>
+                <Link onClick={logout} to="/">
+                  Se déconnecter
+                </Link>
               </li>
               {isAdmin && (
-                <li><Link to="/bo">Admin</Link></li>
+                <li>
+                  <Link to="/bo">Admin</Link>
+                </li>
               )}
             </>
           ) : (
-            <li><Link to="/login">Se connecter</Link></li>
+            <li>
+              <Link to="/login">Se connecter</Link>
+            </li>
           )}
         </ul>
       </div>

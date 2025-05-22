@@ -48,16 +48,14 @@ const Register = () => {
     } catch (error) {
       console.error("Erreur lors de l'inscription :", error.message);
     } finally {
-      // Réinitialise l'état après la soumission
       setIsSubmitting(false);
     }
   };
 
   return (
     <div>
-
       <div className={styles.registerForm}>
-              <h2>Inscription</h2>
+        <h2>Inscription</h2>
         <form onSubmit={handleSubmit}>
           <label htmlFor="firstName">Prénom :</label>
           <input

@@ -1,19 +1,19 @@
 // components/UpdateForm.tsx
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import { useState } from 'react';
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { useState } from "react";
 import styles from "./UpdateForm.module.scss";
 
 const fieldConfigs = {
   users: ["first_name", "last_name", "email", "role"],
   exercises: ["name", "description"],
   templates: ["name", "description", "is_public"],
-  sets : ["weight", "sets", "reps", "rest_time"]
+  sets: ["weight", "sets", "reps", "rest_time"],
 } as const;
 
 type UpdateFormData = {
@@ -65,7 +65,7 @@ export function UpdateForm<R extends Resource>(props: {
   const [formData, setFormData] = useState<UpdateFormData[R]>(initialData);
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = () => {
@@ -74,31 +74,30 @@ export function UpdateForm<R extends Resource>(props: {
   };
 
   return (
-      <Dialog
-        open={open}
-        onClose={onClose}
-        className={styles.updateDialog}
-      >
-        <DialogTitle>Mettre à jour</DialogTitle>
-        <DialogContent>
-          <form className={styles.dialogForm}>
-            <FormControl fullWidth>
-              {fieldConfigs[resource].map((field) => (
-                <TextField
-                  key={field}
-                  label={field.charAt(0).toUpperCase() + field.slice(1)}
-                  value={(formData as any)[field] ?? ""}
-                  onChange={(e) => handleChange(field, e.target.value)}
-                  fullWidth
-                />
-              ))}
-            </FormControl>
-          </form>
-        </DialogContent>
-        <DialogActions className={styles.dialogActions}>
-          <Button onClick={onClose}>Annuler</Button>
-          <Button variant="contained" onClick={handleSubmit}>Mettre à jour</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog open={open} onClose={onClose} className={styles.updateDialog}>
+      <DialogTitle>Mettre à jour</DialogTitle>
+      <DialogContent>
+        <form className={styles.dialogForm}>
+          <FormControl fullWidth>
+            {fieldConfigs[resource].map((field) => (
+              <TextField
+                key={field}
+                label={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={(formData as any)[field] ?? ""}
+                onChange={(e) => handleChange(field, e.target.value)}
+                fullWidth
+                style={{ marginBottom: "0.8rem" }}
+              />
+            ))}
+          </FormControl>
+        </form>
+      </DialogContent>
+      <DialogActions className={styles.dialogActions}>
+        <Button onClick={onClose}>Annuler</Button>
+        <Button variant="contained" onClick={handleSubmit}>
+          Mettre à jour
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
-};
+}

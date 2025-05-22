@@ -81,11 +81,11 @@
 
         a {
           text-decoration: none;
-           color: var(--footer-text);
+          color: var(--footer-text);
           transition: color 0.3s;
 
           &:hover {
-        color: var(--footer-icon-hover);
+            color: var(--footer-icon-hover);
           }
         }
       }

@@ -1,8 +1,15 @@
-import { API_BASE_URL, API_ENDPOINTS, getDefaultHeaders } from "./../config/apiConfig";
+import {
+  API_BASE_URL,
+  API_ENDPOINTS,
+  getDefaultHeaders,
+} from "./../config/apiConfig";
 
 export async function apiDelete(resource: string, id: number) {
   const url = `${API_BASE_URL}${API_ENDPOINTS.delete(resource, id)}`;
-  const res = await fetch(url, { method: "DELETE", headers: getDefaultHeaders() });
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: getDefaultHeaders(),
+  });
   if (!res.ok) throw new Error(`Erreur DELETE ${res.status}`);
   return res.json();
 }
@@ -17,7 +24,11 @@ export async function apiUpdate(resource: string, id: number, payload: any) {
   if (!res.ok) throw new Error(`Erreur UPDATE ${res.status}`);
   return res.json();
 }
-  export const fetchResource = async <T>(url: string, setter: (data: T[]) => void, label: string) => {
+export const fetchResource = async <T>(
+  url: string,
+  setter: (data: T[]) => void,
+  label: string
+) => {
   try {
     const response = await fetch(url, {
       method: "GET",

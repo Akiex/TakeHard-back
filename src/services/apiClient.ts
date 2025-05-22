@@ -2,17 +2,15 @@
 
 import { API_BASE_URL, getDefaultHeaders } from "../config/apiConfig";
 
-
 interface RequestOptions extends RequestInit {
   useBaseUrl?: boolean;
 }
 
-export const apiFetch = async (endpoint: string, options: RequestOptions = {}) => {
-  const {
-    useBaseUrl = true,
-    headers,
-    ...rest
-  } = options;
+export const apiFetch = async (
+  endpoint: string,
+  options: RequestOptions = {}
+) => {
+  const { useBaseUrl = true, headers, ...rest } = options;
 
   const url = useBaseUrl ? `${API_BASE_URL}${endpoint}` : endpoint;
 

@@ -1,5 +1,9 @@
 // services/api.ts
-import { API_BASE_URL, API_ENDPOINTS, getDefaultHeaders } from "../config/apiConfig";
+import {
+  API_BASE_URL,
+  API_ENDPOINTS,
+  getDefaultHeaders,
+} from "../config/apiConfig";
 
 export const createUser = async (userData: {
   first_name: string;

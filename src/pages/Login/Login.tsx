@@ -53,13 +53,16 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-
       </form>
       <p>
         Pas encore inscrit ? <Link to="/register">Créer un compte</Link>
       </p>
-          <Button text={loading ? "Connexion en cours..." : "Se connecter"} variant="secondary" type="submit" onClick={handleSubmit} />
+      <Button
+        text={loading ? "Connexion en cours..." : "Se connecter"}
+        variant="secondary"
+        type="submit"
+        onClick={handleSubmit}
+      />
     </div>
   );
 };

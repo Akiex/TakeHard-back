@@ -1,7 +1,7 @@
 @use "../../styles/variables.scss" as *;
-        .test{
-      display:none;
-    }
+.test {
+  display: none;
+}
 /* ------------------------- */
 /*       SLIDER WRAPPER      */
 /* ------------------------- */
@@ -98,16 +98,14 @@
     flex: 0 0 60%;
     max-width: 60%;
     height: 25vh;
-
   }
-
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
-.test{
-  display:block;
-}
+  .test {
+    display: block;
+  }
   .cardTemplate {
     flex: 0 0 20vw;
     max-width: 20vw;
@@ -148,9 +146,9 @@
   ul:hover {
     cursor: pointer;
   }
-      .test{
-      display:block;
-    }
+  .test {
+    display: block;
+  }
   .exerciseTitle {
     white-space: normal;
     overflow: visible;

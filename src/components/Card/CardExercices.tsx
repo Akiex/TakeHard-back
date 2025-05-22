@@ -1,6 +1,6 @@
-import React from 'react';
-import styles from './Card.module.scss';
-import { Exercise } from '../../types/typesCard';
+import React from "react";
+import styles from "./Card.module.scss";
+import { Exercise } from "../../types/typesCard";
 
 interface Props {
   exercise: Exercise;
@@ -9,13 +9,14 @@ interface Props {
 }
 
 const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
-  const firstGroupName = exercise.muscle_groups && exercise.muscle_groups.length > 0
-    ? exercise.muscle_groups[0].name
-    : 'Pas de groupe';
+  const firstGroupName =
+    exercise.muscle_groups && exercise.muscle_groups.length > 0
+      ? exercise.muscle_groups[0].name
+      : "Pas de groupe";
 
   return (
     <div
-      className={`${styles.cardExercice} ${isSelected ? styles.selected : ''}`}
+      className={`${styles.cardExercice} ${isSelected ? styles.selected : ""}`}
       onClick={onSelect}
     >
       <h4>{exercise.name}</h4>

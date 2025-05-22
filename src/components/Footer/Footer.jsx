@@ -10,13 +10,30 @@ const Footer = () => {
           <div className={styles.brand}>
             <img src={logo} alt="Logo" className={styles.logo} />
             <p className={styles.description}>
-              Take-Hardvantage est une plateforme d’outils pour les sportifs passionnés.
+              Take-Hardvantage est une plateforme d’outils pour les sportifs
+              passionnés.
             </p>
             <ul className={styles.socials}>
-              <li><a href="#" className={styles.icon}><i className="fab fa-twitter"></i></a></li>
-              <li><a href="#" className={styles.icon}><i className="fab fa-facebook-f"></i></a></li>
-              <li><a href="#" className={styles.icon}><i className="fab fa-instagram"></i></a></li>
-              <li><a href="#" className={styles.icon}><i className="fab fa-github"></i></a></li>
+              <li>
+                <a href="#" className={styles.icon}>
+                  <i className="fab fa-twitter"></i>
+                </a>
+              </li>
+              <li>
+                <a href="#" className={styles.icon}>
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+              </li>
+              <li>
+                <a href="#" className={styles.icon}>
+                  <i className="fab fa-instagram"></i>
+                </a>
+              </li>
+              <li>
+                <a href="#" className={styles.icon}>
+                  <i className="fab fa-github"></i>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -24,10 +41,18 @@ const Footer = () => {
           <div className={styles.section}>
             <h5>Entreprise</h5>
             <ul>
-              <li><a href="#">À propos</a></li>
-              <li><a href="#">Fonctionnalités</a></li>
-              <li><a href="#">Projets</a></li>
-              <li><a href="#">Carrière</a></li>
+              <li>
+                <a href="#">À propos</a>
+              </li>
+              <li>
+                <a href="#">Fonctionnalités</a>
+              </li>
+              <li>
+                <a href="#">Projets</a>
+              </li>
+              <li>
+                <a href="#">Carrière</a>
+              </li>
             </ul>
           </div>
 
@@ -35,17 +60,26 @@ const Footer = () => {
           <div className={styles.section}>
             <h5>Aide</h5>
             <ul>
-              <li><a href="#">Support client</a></li>
-              <li><a href="#">Livraison</a></li>
-              <li><a href="/conditions-generales">Conditions générales</a></li>
-              <li><a href="/confidentialite">Confidentialité</a></li>
+              <li>
+                <a href="#">Support client</a>
+              </li>
+              <li>
+                <a href="#">Livraison</a>
+              </li>
+              <li>
+                <a href="/conditions-generales">Conditions générales</a>
+              </li>
+              <li>
+                <a href="/confidentialite">Confidentialité</a>
+              </li>
             </ul>
           </div>
         </div>
 
         <hr />
         <p className={styles.copyright}>
-          &copy; {new Date().getFullYear()} Take-Hardvantage. Tous droits réservés.
+          &copy; {new Date().getFullYear()} Take-Hardvantage. Tous droits
+          réservés.
         </p>
       </div>
     </footer>

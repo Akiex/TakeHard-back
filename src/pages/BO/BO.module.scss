@@ -1,13 +1,14 @@
 // File: BO.module.scss
 @use "../../styles/variables.scss" as *;
-
+@use "sass:color";
+@use "../../styles/variables.scss" as vars;
 // Desktop and tablet styles
 .BO table {
   border: 1px solid #ccc;
   border-collapse: collapse;
   margin: 20px auto;
   width: 80%;
-  
+
   table-layout: fixed;
   background-color: $white-color;
   color: $text-color;
@@ -17,18 +18,29 @@
 
 .BO th,
 .BO td {
-  padding: .625em;
+  padding: 0.75em;
+  height: 3em;
+  vertical-align: middle;
+  box-sizing: border-box;
   text-align: left;
   font-size: 14px;
   border-bottom: 1px solid #ddd;
   color: $text-color;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    overflow: auto;
+    text-overflow: initial;
+    white-space: initial;
+  }
 }
 
 .BO th {
   background-color: $darkred-color;
   color: $white-color;
-  font-size: .85em;
-  letter-spacing: .1em;
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: bold;
 }
@@ -47,7 +59,9 @@
 }
 
 .BO td button {
-  margin: 1em;
+  margin: 0 0.25em;
+  padding: 0.5em;
+  line-height: 1;
 }
 
 // Mobile styles
@@ -60,9 +74,9 @@
   .BO td {
     display: block;
     text-align: right;
-    padding: .625em;
+    padding: 0.625em;
     border-bottom: 1px solid #ddd;
-    font-size: .8em;
+    font-size: 0.8em;
   }
 
   .BO thead {
@@ -78,7 +92,7 @@
 
   .BO tr {
     display: block;
-    margin-bottom: .625em;
+    margin-bottom: 0.625em;
     border: 3px solid #ddd;
   }
 
@@ -103,4 +117,84 @@
   max-width: 75%;
   margin: auto;
   padding: 0 1em;
+}
+.addForm {
+  margin: 2em auto 1em;
+  max-width: 400px;
+  padding: 1.5em;
+  background-color: vars.$white-color;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  input {
+    width: 100%;
+    padding: 0.75em;
+    border: 1px solid color.adjust(vars.$darkred-color, $lightness: 20%);
+    border-radius: 5px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+      color: vars.$text-color;
+      opacity: 0.6;
+    }
+
+    &:focus {
+      border-color: vars.$darkred-color;
+      outline: none;
+      box-shadow: 0 0 4px rgba(vars.$darkred-color, 0.3);
+    }
+  }
+
+  button {
+    padding: 0.75em;
+    background: linear-gradient(
+      to bottom,
+      color.adjust(vars.$darkred-color, $lightness: 10%),
+      vars.$darkred-color
+    );
+    color: vars.$white-color;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s, transform 0.1s;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(
+        to bottom,
+        color.adjust(vars.$darkred-color, $lightness: 15%),
+        color.adjust(vars.$darkred-color, $lightness: 2%)
+      );
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  a {
+    margin-top: 0.5em;
+    text-decoration: none;
+    color: vars.$darkred-color;
+    align-self: flex-end;
+    transition: color 0.3s, text-shadow 0.3s;
+
+    &:hover {
+      color: vars.$orange-color;
+      text-shadow: 0 0 6px rgba(vars.$orange-color, 0.7);
+    }
+  }
 }

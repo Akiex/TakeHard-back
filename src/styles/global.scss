@@ -1,4 +1,3 @@
-@use "./mixins.scss" as *;
 @use "./variables.scss" as *;
 @use "./../pages/Home/Home.module.scss" as *;
 @use "./../pages/BO/BO.module.scss" as *;
@@ -6,9 +5,6 @@
 @use "./../pages/Register/Register.module.scss" as *;
 @use "./../pages/Profile/AccountPage.module.scss" as *;
 
-/* ...ton reset et styles existants ... */
-
-/* 1.2. Déclaration des CSS vars en light mode */
 :root {
   --bg-color: #{$white-color};
   --text-color: #{$text-color};
@@ -23,7 +19,6 @@
   --footer-icon-hover: #{$darkorange-color};
 }
 
-/* 1.3. Override pour dark mode */
 body.dark-mode {
   --bg-color: #{$background-dark};
   --text-color: #{$white-color};
@@ -50,7 +45,9 @@ body.dark-mode {
 /* ------------------------- */
 /*     STRUCTURE GÉNÉRALE    */
 /* ------------------------- */
-html, body, #root {
+html,
+body,
+#root {
   width: 100vw;
   height: 100vh;
 }
@@ -62,7 +59,6 @@ body {
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
-
 }
 body {
   scrollbar-width: none; /* Firefox */
@@ -76,26 +72,23 @@ body::-webkit-scrollbar {
 /*         TITRES            */
 /* ------------------------- */
 
-h1, h2, h3,h4,h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   font-family: "Bebas Neue", sans-serif;
   font-weight: normal;
   color: $darkred-color;
   letter-spacing: 0.5px;
 }
-h4,h5{
+h4,
+h5 {
   color: $darkred-color;
 
-
-  text-shadow:
-    2px 2px 0 $white-color,
-    2px -2px 0 $white-color,
-    -2px 2px 0 $white-color,
-    -2px -2px 0$white-color,
-    2px 0px 0 $white-color,
-    0px 2px 0 $white-color,
-    -2px 0px 0 $white-color,
-    0px -2px 0 $white-color,
-  ;
+  text-shadow: 2px 2px 0 $white-color, 2px -2px 0 $white-color,
+    -2px 2px 0 $white-color, -2px -2px 0$white-color, 2px 0px 0 $white-color,
+    0px 2px 0 $white-color, -2px 0px 0 $white-color, 0px -2px 0 $white-color;
   padding: 0.5em;
   text-align: center;
   font-family: "Bebas Neue", sans-serif;
@@ -207,7 +200,8 @@ body.dark-mode {
       border-color: $surface-light;
     }
 
-    label,div {
+    label,
+    div {
       color: $white-color;
     }
   }
@@ -232,7 +226,11 @@ body.dark-mode {
     color: $white-color;
   }
 
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     color: $orange-color;
     text-shadow: none;
   }
@@ -257,43 +255,42 @@ body.dark-mode {
     color: $white-color;
   }
   body.dark-mode .footer {
-  background-color: $background-dark;
-  color: $white-color;
+    background-color: $background-dark;
+    color: $white-color;
 
-  .brand .description,
-  .copyright {
-    color: $gray-color;
-  }
-
-  .socials .icon {
-    background: $white-color;
-    color: $background-dark;
-
-    &:hover {
-      background: $orange-color;
-      color: $white-color;
-    }
-  }
-
-  .section {
-    h4 {
-      color: $surface-light;
+    .brand .description,
+    .copyright {
+      color: $gray-color;
     }
 
-    ul li a {
-      color: $white-color;
+    .socials .icon {
+      background: $white-color;
+      color: $background-dark;
 
       &:hover {
-        color: $orange-color;
+        background: $orange-color;
+        color: $white-color;
       }
     }
-  }
 
-  hr {
-    border-top: 1px solid $darkorange-color;
-  }
-}
+    .section {
+      h4 {
+        color: $surface-light;
+      }
 
+      ul li a {
+        color: $white-color;
+
+        &:hover {
+          color: $orange-color;
+        }
+      }
+    }
+
+    hr {
+      border-top: 1px solid $darkorange-color;
+    }
+  }
 }
 .dark-toggle {
   position: absolute;

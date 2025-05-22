@@ -18,7 +18,7 @@ type Resource = keyof typeof fieldConfigs;
 type FormDataUser = {
   first_name: string;
   last_name: string;
-  email: string ;
+  email: string;
   role: string;
 };
 
@@ -42,33 +42,43 @@ const BO = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [initialData, setInitialData] = useState<FormData | null>(null);
-
+  const [newExercise, setNewExercise] = useState<FormDataExercise>({
+    name: "",
+    description: "",
+  });
+  const [adding, setAdding] = useState(false);
   // Fonction qui extrait les données initiales selon la ressource
-const getInitialFormData = (item: any): FormData => {
-  if ('first_name' in item && 'last_name' in item && 'email' in item && 'role' in item) {
-    return {
-      first_name: item.first_name ?? "",
-      last_name: item.last_name ?? "",
-      email: item.email ?? "",
-      role: item.role ?? "",
-    };
-  } else if ('is_public' in item) {
-    return {
-      name: item.name ?? "",
-      description: item.description ?? "",  // par défaut ""
-      is_public: item.is_public ?? false,   // par défaut false
-    };
-  } else {
-    return {
-      name: item.name ?? "",
-      description: item.description ?? "",
-    };
-  }
-};
-
+  const getInitialFormData = (item: any): FormData => {
+    if (
+      "first_name" in item &&
+      "last_name" in item &&
+      "email" in item &&
+      "role" in item
+    ) {
+      return {
+        first_name: item.first_name ?? "",
+        last_name: item.last_name ?? "",
+        email: item.email ?? "",
+        role: item.role ?? "",
+      };
+    } else if ("is_public" in item) {
+      return {
+        name: item.name ?? "",
+        description: item.description ?? "", // par défaut ""
+        is_public: item.is_public ?? false, // par défaut false
+      };
+    } else {
+      return {
+        name: item.name ?? "",
+        description: item.description ?? "",
+      };
+    }
+  };
 
   const openUpdateModal = (resource: Resource, id: number) => {
     setSelectedResource(resource);
@@ -88,10 +98,46 @@ const getInitialFormData = (item: any): FormData => {
   const handleClose = () => {
     setOpenModal(false);
   };
+  const handleNewExerciseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewExercise((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const fetchUsers = () => fetchResource<User>(`${API_BASE_URL}${API_ENDPOINTS.getAllUsers}`, setUsers, "users");
-  const fetchTemplates = () => fetchResource<Template>(`${API_BASE_URL}${API_ENDPOINTS.getAllTemplates}`, setTemplates, "templates");
-  const fetchExercices = () => fetchResource<Exercise>(`${API_BASE_URL}${API_ENDPOINTS.getAllExercises}`, setExercices, "exercices");
+  const handleAddExercise = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAdding(true);
+    try {
+      await fetch(`${API_BASE_URL}${API_ENDPOINTS.createExercise}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newExercise),
+      });
+      await fetchData("exercises");
+      setNewExercise({ name: "", description: "" });
+    } catch (err: any) {
+      setError(err.message || "Erreur à l'ajout");
+    } finally {
+      setAdding(false);
+    }
+  };
+  const fetchUsers = () =>
+    fetchResource<User>(
+      `${API_BASE_URL}${API_ENDPOINTS.getAllUsers}`,
+      setUsers,
+      "users"
+    );
+  const fetchTemplates = () =>
+    fetchResource<Template>(
+      `${API_BASE_URL}${API_ENDPOINTS.getAllTemplates}`,
+      setTemplates,
+      "templates"
+    );
+  const fetchExercices = () =>
+    fetchResource<Exercise>(
+      `${API_BASE_URL}${API_ENDPOINTS.getAllExercises}`,
+      setExercices,
+      "exercices"
+    );
 
   const fetchData = async (resource: Resource) => {
     switch (resource) {
@@ -187,8 +233,14 @@ const getInitialFormData = (item: any): FormData => {
                     <td data-label="Email">{user.email}</td>
                     <td data-label="Role">{user.role}</td>
                     <td data-label="Actions">
-                      <Button text="✎" onClick={() => openUpdateModal("users", user.id)} />{" "}
-                      <Button text="🗑️" onClick={() => handleDelete("users", user.id)} />
+                      <Button
+                        text="✎"
+                        onClick={() => openUpdateModal("users", user.id)}
+                      />{" "}
+                      <Button
+                        text="🗑️"
+                        onClick={() => handleDelete("users", user.id)}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -220,11 +272,17 @@ const getInitialFormData = (item: any): FormData => {
                     <td data-label="Name">{template.name}</td>
                     <td data-label="Description">{template.description}</td>
                     <td data-label="Actions">
-                      <Button text="✎" onClick={() => openUpdateModal("templates", template.id)} />{" "}
-                      <Button text="🗑️" onClick={() => handleDelete("templates", template.id)} />
+                      <Button
+                        text="✎"
+                        onClick={() =>
+                          openUpdateModal("templates", template.id)
+                        }
+                      />{" "}
+                      <Button
+                        text="🗑️"
+                        onClick={() => handleDelete("templates", template.id)}
+                      />
                     </td>
-                    <td></td>
-                    <td></td>
                   </tr>
                 ))}
               </tbody>
@@ -234,6 +292,25 @@ const getInitialFormData = (item: any): FormData => {
 
         <section>
           <h2>Section Exercices</h2>
+          <form className={styles.addForm} onSubmit={handleAddExercise}>
+            <input
+              name="name"
+              placeholder="Nom de l'exercice"
+              value={newExercise.name}
+              onChange={handleNewExerciseChange}
+              required
+            />
+            <input
+              name="description"
+              placeholder="Description"
+              value={newExercise.description}
+              onChange={handleNewExerciseChange}
+              required
+            />
+            <button type="submit" disabled={adding}>
+              {adding ? "Ajout..." : "Ajouter"}
+            </button>
+          </form>
           {loading ? (
             <p>Chargement...</p>
           ) : error ? (
@@ -255,11 +332,17 @@ const getInitialFormData = (item: any): FormData => {
                     <td data-label="Name">{exercice.name}</td>
                     <td data-label="Description">{exercice.description}</td>
                     <td data-label="Actions">
-                      <Button text="✎" onClick={() => openUpdateModal("exercises", exercice.id)} />{" "}
-                      <Button text="🗑️" onClick={() => handleDelete("exercises", exercice.id)} />
+                      <Button
+                        text="✎"
+                        onClick={() =>
+                          openUpdateModal("exercises", exercice.id)
+                        }
+                      />{" "}
+                      <Button
+                        text="🗑️"
+                        onClick={() => handleDelete("exercises", exercice.id)}
+                      />
                     </td>
-                    <td></td>
-                    <td></td>
                   </tr>
                 ))}
               </tbody>

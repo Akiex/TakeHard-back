@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface AuthContextType {
   userId: number | null;
@@ -15,33 +21,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
 
-// AuthContext.tsx
-useEffect(() => {
-  const token = localStorage.getItem("token");
-  console.log("AuthProvider useEffect, token:", token);
-  if (token) {
-    setIsConnected(true);
-    try {
-      const decoded: any = JSON.parse(atob(token.split('.')[1]));
-      console.log("Decoded JWT in useEffect:", decoded);
-      setIsAdmin(decoded.role === "admin");
-      setUserId(decoded.user_id);
-    } catch (e) {
-      console.error(e);
+  // AuthContext.tsx
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("AuthProvider useEffect, token:", token);
+    if (token) {
+      setIsConnected(true);
+      try {
+        const decoded: any = JSON.parse(atob(token.split(".")[1]));
+        console.log("Decoded JWT in useEffect:", decoded);
+        setIsAdmin(decoded.role === "admin");
+        setUserId(decoded.user_id);
+      } catch (e) {
+        console.error(e);
+      }
     }
-  }
-}, []);
+  }, []);
 
-const login = (token: string, admin: boolean) => {
-  console.log("login() called with", token, admin);
-  localStorage.setItem("token", token);
-  setIsConnected(true);
-  setIsAdmin(admin);
-  const decoded: any = JSON.parse(atob(token.split('.')[1]));
-  console.log("Decoded JWT in login():", decoded);
-  setUserId(decoded.user_id);
-};
-
+  const login = (token: string, admin: boolean) => {
+    console.log("login() called with", token, admin);
+    localStorage.setItem("token", token);
+    setIsConnected(true);
+    setIsAdmin(admin);
+    const decoded: any = JSON.parse(atob(token.split(".")[1]));
+    console.log("Decoded JWT in login():", decoded);
+    setUserId(decoded.user_id);
+  };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -53,7 +58,9 @@ const login = (token: string, admin: boolean) => {
   };
 
   return (
-    <AuthContext.Provider value={{ userId, isConnected, isAdmin, login, logout }}>
+    <AuthContext.Provider
+      value={{ userId, isConnected, isAdmin, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

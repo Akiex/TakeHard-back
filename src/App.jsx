@@ -5,8 +5,8 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import "./styles/global.scss";
 import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from './utils/theme';
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { lightTheme, darkTheme } from "./utils/theme";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -18,19 +18,19 @@ const App = () => {
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Header />
-        <button
-          className="dark-toggle"
-          onClick={() => setDarkMode(!darkMode)}
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
-        <main>
-          <AppRoutes />
-        </main>
-        <Footer />
-      </BrowserRouter>
+        <BrowserRouter>
+          <Header />
+          <button
+            className="dark-toggle"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+          <main>
+            <AppRoutes />
+          </main>
+          <Footer />
+        </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
   );

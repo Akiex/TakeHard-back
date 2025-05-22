@@ -108,18 +108,17 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;            // espace entre les items
+  gap: 1.5rem;
 }
 
 .navMenu li {
-  /* Plus de padding ici, juste un arrondi si besoin */
-  border-radius: 0.5rem;  
+  border-radius: 0.5rem;
 }
 
 .navMenu a {
-  display: block;         // occupe toute la largeur du li
-  padding: 0.75rem 1rem;  // padding déplacé ici
-  border-radius: 0.5rem;  // arrondi sur le lien
+  display: block;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   text-decoration: none;
   color: vars.$white-color;
   font-size: 1.25rem;
@@ -176,4 +175,3 @@
     text-decoration: none;
   }
 }
-

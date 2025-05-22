@@ -6,10 +6,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import styles from "./Card.module.scss";
-import CardModal from './cardModal';
+import CardModal from "./cardModal";
 
 interface CardWrapperProps {
-  type: 'exercices' | 'templates';
+  type: "exercices" | "templates";
 }
 
 const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
@@ -38,24 +38,24 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
           slidesToShow: 2,
           slidesToScroll: 1,
           infinite: true,
-          dots: true
-        }
+          dots: true,
+        },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-        }
+        },
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }
-    ]
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const fetchCards = () => {
@@ -63,11 +63,11 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
     const apiUrl = type === "exercices" ? "/exercises" : "/templates";
 
     fetch(`${API_BASE_URL}${apiUrl}`)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`);
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (Array.isArray(data)) {
           setCards(data);
         } else {
@@ -75,9 +75,11 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
           setError("Format de données inattendu.");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Erreur de récupération:", err);
-        setError("Une erreur est survenue lors de la récupération des données.");
+        setError(
+          "Une erreur est survenue lors de la récupération des données."
+        );
       })
       .finally(() => {
         setIsLoading(false);
@@ -92,33 +94,29 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
   if (error) return <p>{error}</p>;
   if (cards.length === 0) return <p>Aucune carte trouvée.</p>;
 
-
-     return (
+  return (
     <>
       <Slider {...settings} className={styles.slider}>
-        {cards.map(card => {
+        {cards.map((card) => {
           const isSel = selectedCard === card.id;
           const onClick = () => setSelectedCard(isSel ? null : card.id);
           return (
             <div key={card.id} className={styles.slideWrapper}>
-              <div
-                className={`${styles.cardContainer}`}
-                onClick={onClick}
-              >
-              {type === "exercices" ? (
-                <CardExercice
-                  exercise={card}
-                  isSelected={isSel}
-                  onSelect={onClick}
-                />
-              ) : (
-                <CardTemplate
-                  template={card}
-                  isSelected={isSel}
-                  onSelect={onClick}
-                />
-              )}
-            </div>
+              <div className={`${styles.cardContainer}`} onClick={onClick}>
+                {type === "exercices" ? (
+                  <CardExercice
+                    exercise={card}
+                    isSelected={isSel}
+                    onSelect={onClick}
+                  />
+                ) : (
+                  <CardTemplate
+                    template={card}
+                    isSelected={isSel}
+                    onSelect={onClick}
+                  />
+                )}
+              </div>
             </div>
           );
         })}
@@ -126,9 +124,9 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
 
       {selectedCard !== null && (
         <CardModal
-          card={cards.find(c => c.id === selectedCard)!}
+          card={cards.find((c) => c.id === selectedCard)!}
           onClose={() => setSelectedCard(null)}
-            cardType={type}
+          cardType={type}
         />
       )}
     </>
@@ -136,4 +134,3 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
 };
 
 export default CardWrapper;
-

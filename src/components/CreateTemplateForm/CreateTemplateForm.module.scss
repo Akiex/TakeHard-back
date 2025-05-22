@@ -115,11 +115,7 @@
       width: 100%;
       padding: 0.75em;
       margin-top: 0.75em;
-      background: linear-gradient(
-        to bottom,
-        #6f1519,
-        var(--footer-icon-hover)
-      );
+      background: linear-gradient(to bottom, #6f1519, var(--footer-icon-hover));
       color: var(--footer-icon-color);
       font-size: 1rem;
       font-weight: 600;
@@ -130,11 +126,7 @@
       transition: background 0.3s, transform 0.1s;
 
       &:hover {
-        background: linear-gradient(
-          to bottom,
-          #7f1a1f,
-          #68100d
-        );
+        background: linear-gradient(to bottom, #7f1a1f, #68100d);
       }
 
       &:active {
@@ -179,11 +171,7 @@
 
       button[type="button"],
       button[type="submit"] {
-        background: linear-gradient(
-          to bottom,
-          #ccc,
-          var(--footer-icon-color)
-        );
+        background: linear-gradient(to bottom, #ccc, var(--footer-icon-color));
         color: var(--bg-color);
       }
     }

@@ -11,10 +11,10 @@ interface Entry {
   rest_time: number;
 }
 
-const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) => void }> = ({
-  userId,
-  onCreated,
-}) => {
+const CreateTemplateForm: React.FC<{
+  userId: number;
+  onCreated: (t: Template) => void;
+}> = ({ userId, onCreated }) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [entries, setEntries] = useState<Entry[]>([
     { exerciseId: 0, sets: 3, reps: 10, weight: 0, rest_time: 60 },
@@ -47,7 +47,9 @@ const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) =>
   ) => {
     setEntries((prev) =>
       prev.map((e, i) =>
-        i === idx ? { ...e, [field]: typeof value === "string" ? Number(value) : value } : e
+        i === idx
+          ? { ...e, [field]: typeof value === "string" ? Number(value) : value }
+          : e
       )
     );
   };
@@ -59,16 +61,19 @@ const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) =>
     try {
       const createdSetIds = await Promise.all(
         entries.map(async (entry) => {
-          const resp = await fetch(`${API_BASE_URL}${API_ENDPOINTS.createSet}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              sets: entry.sets,
-              reps: entry.reps,
-              weight: entry.weight,
-              rest_time: entry.rest_time,
-            }),
-          });
+          const resp = await fetch(
+            `${API_BASE_URL}${API_ENDPOINTS.createSet}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                sets: entry.sets,
+                reps: entry.reps,
+                weight: entry.weight,
+                rest_time: entry.rest_time,
+              }),
+            }
+          );
           if (!resp.ok) throw new Error("Erreur création set");
           const json: { id: number } = await resp.json();
           return { setId: json.id, exerciseId: entry.exerciseId };
@@ -101,7 +106,9 @@ const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) =>
       setName("");
       setDescription("");
       setIsPublic(false);
-      setEntries([{ exerciseId: 0, sets: 3, reps: 10, weight: 0, rest_time: 60 }]);
+      setEntries([
+        { exerciseId: 0, sets: 3, reps: 10, weight: 0, rest_time: 60 },
+      ]);
     } catch (err) {
       console.error(err);
       alert("Impossible de créer le template");
@@ -165,7 +172,9 @@ const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) =>
                 type="number"
                 min={1}
                 value={entry.sets}
-                onChange={(e) => updateEntry(idx, "sets", e.currentTarget.value)}
+                onChange={(e) =>
+                  updateEntry(idx, "sets", e.currentTarget.value)
+                }
               />
             </div>
             <div>
@@ -174,7 +183,9 @@ const CreateTemplateForm: React.FC<{ userId: number; onCreated: (t: Template) =>
                 type="number"
                 min={1}
                 value={entry.reps}
-                onChange={(e) => updateEntry(idx, "reps", e.currentTarget.value)}
+                onChange={(e) =>
+                  updateEntry(idx, "reps", e.currentTarget.value)
+                }
               />
             </div>
             <div>

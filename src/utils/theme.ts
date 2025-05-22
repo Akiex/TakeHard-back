@@ -1,19 +1,19 @@
-import { createTheme } from '@mui/material/styles';
-export const orangeColor      = '#fb2105';  // Accent principal
-export const darkOrangeColor  = '#68100d';  // Hover / active
-export const darkRedColor     = '#5e0c10';  // Danger / alertes fortes
-export const whiteColor       = '#f5f5f5';  // Fond principal
-export const textColor        = '#131313';  // Texte principal
+import { createTheme } from "@mui/material/styles";
+export const orangeColor = "#fb2105";
+export const darkOrangeColor = "#68100d";
+export const darkRedColor = "#5e0c10";
+export const whiteColor = "#f5f5f5";
+export const textColor = "#131313";
 
-export const grayColor        = '#999999';  // Texte secondaire
-export const backgroundDark   = '#1a1a1a';  // Fond sombre
-export const surfaceLight     = '#eaeaea';  // Séparateurs / surfaces légères
-export const accentCool       = '#1e2a38';  // Accent secondaire froid
-export const accentGreen      = '#4b6043';  // Accent alternatif doux// adapte le chemin
+export const grayColor = "#999999";
+export const backgroundDark = "#1a1a1a";
+export const surfaceLight = "#eaeaea";
+export const accentCool = "#1e2a38";
+export const accentGreen = "#4b6043";
 
 export const lightTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     background: {
       default: whiteColor,
       paper: whiteColor,
@@ -35,7 +35,7 @@ export const lightTheme = createTheme({
 
 export const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     background: {
       default: backgroundDark,
       paper: backgroundDark,
@@ -54,3 +54,4 @@ export const darkTheme = createTheme({
     divider: surfaceLight,
   },
 });
+

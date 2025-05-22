@@ -1,6 +1,9 @@
-import React, { Component, ErrorInfo } from 'react';
+import React, { Component, ErrorInfo } from "react";
 
-class ErrorBoundary extends Component<{children: React.ReactNode}, { hasError: boolean }> {
+class ErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
   constructor(props: any) {
     super(props);
     this.state = { hasError: false };
@@ -16,7 +19,9 @@ class ErrorBoundary extends Component<{children: React.ReactNode}, { hasError: b
 
   render() {
     if (this.state.hasError) {
-      return <h1>Quelque chose s'est mal passé. Veuillez réessayer plus tard.</h1>;
+      return (
+        <h1>Quelque chose s'est mal passé. Veuillez réessayer plus tard.</h1>
+      );
     }
 
     return this.props.children;

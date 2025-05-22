@@ -2,9 +2,6 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../services/apiClient";
 
-/**
- * Generic hook to fetch data from an API endpoint.
- */
 export function useApiResource<T>(
   endpoint: string | null,
   options?: RequestInit
