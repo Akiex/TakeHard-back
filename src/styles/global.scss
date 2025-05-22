@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables.scss" as *;
 @use "./../pages/Home/Home.module.scss" as *;
 @use "./../pages/BO/BO.module.scss" as *;
@@ -195,7 +196,7 @@ body.dark-mode {
     input,
     textarea,
     select {
-      background-color: darken($background-dark, 5%);
+      background-color: color.adjust($background-dark, $lightness: -5%);
       color: $white-color;
       border-color: $surface-light;
     }
@@ -208,7 +209,8 @@ body.dark-mode {
 
   /* override pour TOUTES les tables */
   table {
-    background-color: darken($background-dark, 2%);
+
+    background-color: color.adjust($background-dark, $lightness: -5%);
     color: $white-color;
     border-color: $surface-light;
   }
@@ -217,7 +219,8 @@ body.dark-mode {
   th,
   td,
   tr {
-    background-color: darken($background-dark, 2%);
+
+    background-color: color.adjust($background-dark, $lightness: -5%);
     color: $white-color;
     border: 1px solid $surface-light;
   }
