@@ -1,5 +1,6 @@
 @use "../../styles/variables.scss" as *;
-.test {
+.test,
+img {
   display: none;
 }
 /* ------------------------- */
@@ -29,7 +30,11 @@
 :global(.slick-track) {
   display: flex !important;
 }
-
+:global(.slick-slide) {
+  img{
+    display:none !important;
+  }
+}
 /* ------------------------- */
 /*        CARD LIST          */
 /* ------------------------- */
@@ -99,13 +104,20 @@
     max-width: 60%;
     height: 25vh;
   }
+
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .test {
+  .test,img {
     display: block;
   }
+  :global(.slick-slide) {
+  img{
+    max-width:50%;
+    display:block !important;
+  }
+}
   .cardTemplate {
     flex: 0 0 20vw;
     max-width: 20vw;
@@ -116,6 +128,7 @@
       cursor: pointer;
     }
   }
+
 }
 
 /* ------------------------- */
@@ -146,7 +159,7 @@
   ul:hover {
     cursor: pointer;
   }
-  .test {
+  .test, img {
     display: block;
   }
   .exerciseTitle {
@@ -157,4 +170,9 @@
     font-weight: bold;
     text-align: center;
   }
+  :global(.slick-slide) {
+  img{
+    display:block !important;
+  }
+}
 }

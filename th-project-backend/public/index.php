@@ -9,26 +9,20 @@ require __DIR__ . '/../vendor/autoload.php';
 // Load .env
 Dotenv::createImmutable(__DIR__ . '/../')->load();
 
-// Create Container Builder
 $containerBuilder = new ContainerBuilder();
 
-// Add service definitions
 $containerBuilder->addDefinitions(__DIR__ . '/../src/dependencies.php');
 
-// Build PHP-DI Container
 $container = $containerBuilder->build();
 
-// Set container to AppFactory
 AppFactory::setContainer($container);
 
 // Create App
 $app = AppFactory::create();
 
-// Middleware for parsing JSON bodies and routing
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
-// Error handling middleware (doit venir après que l'app et le container soient définis)
 if ($container->has('errorHandler')) {
     $app->addErrorMiddleware(true, true, true)
         ->setDefaultErrorHandler($container->get('errorHandler'));
@@ -36,7 +30,6 @@ if ($container->has('errorHandler')) {
     $app->addErrorMiddleware(true, true, true);
 }
 
-// Health check route
 $app->get('/', function ($request, $response) {
     $response->getBody()->write(json_encode(['message' => 'API Slim opérationnelle !']));
     return $response->withHeader('Content-Type', 'application/json');

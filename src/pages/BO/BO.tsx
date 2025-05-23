@@ -52,7 +52,6 @@ const BO = () => {
     description: "",
   });
   const [adding, setAdding] = useState(false);
-  // Fonction qui extrait les données initiales selon la ressource
   const getInitialFormData = (item: any): FormData => {
     if (
       "first_name" in item &&
@@ -69,8 +68,8 @@ const BO = () => {
     } else if ("is_public" in item) {
       return {
         name: item.name ?? "",
-        description: item.description ?? "", // par défaut ""
-        is_public: item.is_public ?? false, // par défaut false
+        description: item.description ?? "",
+        is_public: item.is_public ?? false,
       };
     } else {
       return {

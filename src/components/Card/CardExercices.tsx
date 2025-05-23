@@ -7,12 +7,32 @@ interface Props {
   isSelected: boolean;
   onSelect: () => void;
 }
+const src = {
+  Pectoraux_Tricpes: "/cardAssets/Pectoraux_Tricpes.png",
+  Dos_Biceps: "/cardAssets/Dos_Biceps.png",
+  Abdominaux: "/cardAssets/Abdo.png",
+};
+
+const getImageSrcFromDescription = (description: string): string | null => {
+  if (description.toLowerCase().includes("triceps")
+  || description.toLowerCase().includes("pectoraux")) {
+    return src.Pectoraux_Tricpes;
+
+  } else if (description.toLowerCase().includes("biceps")) {
+    return src.Dos_Biceps;
+  } else if (description.toLowerCase().includes("abdominaux")) {
+    return src.Abdominaux;
+  }
+  return null;
+};
 
 const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
   const firstGroupName =
     exercise.muscle_groups && exercise.muscle_groups.length > 0
       ? exercise.muscle_groups[0].name
       : "Pas de groupe";
+
+        const imageSrc = getImageSrcFromDescription(exercise.description || "");
 
   return (
     <div
@@ -22,6 +42,7 @@ const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
       <h4>{exercise.name}</h4>
       <p>{exercise.description}</p>
       <p>Groupe musculaire: {firstGroupName}</p>
+      {imageSrc && <img className={styles.imageBlock} src={imageSrc} alt="illustration groupe musculaire" />}
     </div>
   );
 };
