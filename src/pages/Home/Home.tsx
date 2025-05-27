@@ -4,7 +4,7 @@ import ErrorBoundary from "./../../utils/ErrorBoundary";
 import "./Home.module.scss";
 const Home: React.FC = () => {
   return (
-    <section className="home twelve">
+    <section className="home">
       <ErrorBoundary>
         <h2 className="title">Les derniers templates et exercices</h2>
         <article className="Templates">

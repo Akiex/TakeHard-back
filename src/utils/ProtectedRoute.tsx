@@ -10,7 +10,6 @@ interface DecodedToken {
 const ProtectedRoute = () => {
   const location = useLocation();
   const params = useParams<{ id?: string }>();
-  console.log("🔒 ProtectedRoute for", location.pathname, "params:", params);
 
   const token = localStorage.getItem("token");
   if (!token) {
@@ -47,7 +46,6 @@ const ProtectedRoute = () => {
     }
   }
 
-  console.log("→ Access granted");
   return <Outlet />;
 };
 

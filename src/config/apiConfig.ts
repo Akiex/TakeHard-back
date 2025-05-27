@@ -33,7 +33,7 @@ export const API_ENDPOINTS = {
   getWorkout: (id: number) => `/workouts/${id}`,
   updateWorkout: (id: number) => `/workouts/${id}`,
   deleteWorkout: (id: number) => `/workouts/${id}`,
-  getAllMuscleGroups: "/muscle_groups",
+  getAllMuscleGroups: "/muscle-groups",
   createMuscleGroup: "/muscle_groups",
   getMuscleGroup: (id: number) => `/muscle_groups/${id}`,
   updateMuscleGroup: (id: number) => `/muscle_groups/${id}`,

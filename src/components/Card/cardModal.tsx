@@ -12,7 +12,7 @@ interface CardModalProps {
 
 export default function CardModal({ card, cardType, onClose }: CardModalProps) {
   return ReactDOM.createPortal(
-    <div className={styles.modalBackdrop} onClick={onClose}>
+    <div className={styles.modalBackdrop} onClick={onClose} role="presentation">
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         {cardType === "exercices" ? (
           <CardExercice exercise={card} isSelected onSelect={onClose} />

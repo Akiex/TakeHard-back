@@ -52,7 +52,9 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
+
       </form>
       <p>
         Pas encore inscrit ? <Link to="/register">Créer un compte</Link>
@@ -62,6 +64,7 @@ const Login = () => {
         variant="secondary"
         type="submit"
         onClick={handleSubmit}
+
       />
     </div>
   );

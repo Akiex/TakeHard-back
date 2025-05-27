@@ -6,7 +6,7 @@ import { apiDelete, apiUpdate } from "../../utils/apiHelper";
 import { User, Template, Exercise } from "../../types/typesCard";
 import { fetchResource } from "../../utils/apiHelper";
 import { UpdateForm } from "../../components/Form/UpdateForm/UpdateForm";
-
+import { FormDataExercise, FormDataTemplate, FormDataUser } from "../../types/FormDataType";
 const fieldConfigs = {
   users: ["first_name", "last_name", "email", "role"],
   exercises: ["name", "description"],
@@ -15,25 +15,11 @@ const fieldConfigs = {
 
 type Resource = keyof typeof fieldConfigs;
 
-type FormDataUser = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  role: string;
-};
-
-type FormDataTemplate = {
-  name: string;
-  description: string;
-  is_public: boolean;
-};
-
-type FormDataExercise = {
-  name: string;
-  description: string;
-};
-
 type FormData = FormDataUser | FormDataTemplate | FormDataExercise;
+
+// PAGINATION
+
+const itemsPerPage = 10;
 
 const BO = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -50,8 +36,20 @@ const BO = () => {
   const [newExercise, setNewExercise] = useState<FormDataExercise>({
     name: "",
     description: "",
+    muscle_group_id: "",
   });
   const [adding, setAdding] = useState(false);
+  const [muscleGroups, setMuscleGroups] = useState<{ id: number; name: string }[]>([]);
+  const [usersPage, setUsersPage] = useState(1);
+  const [templatesPage, setTemplatesPage] = useState(1);
+  const [exercisesPage, setExercisesPage] = useState(1);
+
+useEffect(() => {
+  fetch(`${API_BASE_URL}${API_ENDPOINTS.getAllMuscleGroups}`)
+    .then((res) => res.json())
+    .then((data) => setMuscleGroups(data))
+    .catch((err) => console.error("Muscle groups fetch error", err));
+}, []);
   const getInitialFormData = (item: any): FormData => {
     if (
       "first_name" in item &&
@@ -75,6 +73,7 @@ const BO = () => {
       return {
         name: item.name ?? "",
         description: item.description ?? "",
+        muscle_group_id: item.muscle_group_id ?? "",
       };
     }
   };
@@ -112,7 +111,7 @@ const BO = () => {
         body: JSON.stringify(newExercise),
       });
       await fetchData("exercises");
-      setNewExercise({ name: "", description: "" });
+      setNewExercise({ name: "", description: "", muscle_group_id: "" });
     } catch (err: any) {
       setError(err.message || "Erreur à l'ajout");
     } finally {
@@ -202,6 +201,21 @@ const BO = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // PAGINATION
+  // STARTER
+const uStart = (usersPage - 1) * itemsPerPage;
+const tStart = (templatesPage - 1) * itemsPerPage;
+const eStart = (exercisesPage - 1) * itemsPerPage;
+
+// FIN
+const visibleUsers = users.slice(uStart, uStart + itemsPerPage);
+const visibleTemplates = templates.slice(tStart, tStart + itemsPerPage);
+const visibleExercises = exercices.slice(eStart, eStart + itemsPerPage);
+
+// TOTAL
+const usersTotalPages      = Math.ceil(users.length / itemsPerPage);
+const templatesTotalPages  = Math.ceil(templates.length / itemsPerPage);
+const exercisesTotalPages  = Math.ceil(exercices.length / itemsPerPage);
   return (
     <div className={styles.BO}>
       <main>
@@ -224,7 +238,7 @@ const BO = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {visibleUsers.map((user) => (
                   <tr key={user.id}>
                     <td data-label="Id">{user.id}</td>
                     <td data-label="First Name">{user.first_name}</td>
@@ -246,6 +260,25 @@ const BO = () => {
               </tbody>
             </table>
           )}
+          <div className={styles.pagination}>
+            <button
+              onClick={() => setUsersPage(p => Math.max(p - 1, 1))}
+              disabled={usersPage === 1}
+            >
+               «
+            </button>
+            <span>
+              Page {usersPage} / {usersTotalPages}
+            </span>
+            <button
+              onClick={() =>
+                setUsersPage(p => Math.min(p + 1, usersTotalPages))
+              }
+              disabled={usersPage === usersTotalPages}
+            >
+               »
+            </button>
+          </div>
         </section>
 
         <section>
@@ -265,7 +298,7 @@ const BO = () => {
                 </tr>
               </thead>
               <tbody>
-                {templates.map((template) => (
+                {visibleTemplates.map((template) => (
                   <tr key={template.id}>
                     <td data-label="Id">{template.id}</td>
                     <td data-label="Name">{template.name}</td>
@@ -287,27 +320,78 @@ const BO = () => {
               </tbody>
             </table>
           )}
+          <div className={styles.pagination}>
+            <button
+              onClick={() => setTemplatesPage(p => Math.max(p - 1, 1))}
+              disabled={templatesPage === 1}
+            >
+               «
+            </button>
+            <span>
+              Page {templatesPage} / {templatesTotalPages}
+            </span>
+            <button
+              onClick={() =>
+                setTemplatesPage(p => Math.min(p + 1, templatesTotalPages))
+              }
+              disabled={templatesPage === templatesTotalPages}
+            >
+               »
+            </button>
+          </div>
         </section>
 
         <section>
           <h2>Section Exercices</h2>
+
           <form className={styles.addForm} onSubmit={handleAddExercise}>
+            <h3>Ajouter un exercice</h3>
+
+            <label htmlFor="exercise-name">Nom de l'exercice</label>
             <input
+              id="exercise-name"
               name="name"
               placeholder="Nom de l'exercice"
               value={newExercise.name}
               onChange={handleNewExerciseChange}
               required
             />
+
+            <label htmlFor="exercise-desc">Description</label>
             <input
+              id="exercise-desc"
               name="description"
               placeholder="Description"
               value={newExercise.description}
               onChange={handleNewExerciseChange}
               required
             />
+
+            <label htmlFor="exercise-group">Groupe musculaire</label>
+            <select
+              id="exercise-group"
+              name="muscle_group_id"
+              value={newExercise.muscle_group_id}
+              onChange={(e) =>
+                setNewExercise((prev) => ({
+                  ...prev,
+                  muscle_group_id: Number(e.target.value),
+                }))
+              }
+              required
+            >
+              <option value="" disabled>
+                — Sélectionnez un groupe —
+              </option>
+              {muscleGroups.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.name}
+                </option>
+              ))}
+            </select>
+
             <button type="submit" disabled={adding}>
-              {adding ? "Ajout..." : "Ajouter"}
+              {adding ? "Ajout…" : "Ajouter"}
             </button>
           </form>
           {loading ? (
@@ -325,7 +409,7 @@ const BO = () => {
                 </tr>
               </thead>
               <tbody>
-                {exercices.map((exercice) => (
+                {visibleExercises.map((exercice) => (
                   <tr key={exercice.id}>
                     <td data-label="Id">{exercice.id}</td>
                     <td data-label="Name">{exercice.name}</td>
@@ -347,6 +431,25 @@ const BO = () => {
               </tbody>
             </table>
           )}
+          <div className={styles.pagination}>
+            <button
+              onClick={() => setExercisesPage(p => Math.max(p - 1, 1))}
+              disabled={exercisesPage === 1}
+            >
+               «
+            </button>
+            <span>
+              Page {exercisesPage} / {exercisesTotalPages}
+            </span>
+            <button
+              onClick={() =>
+                setExercisesPage(p => Math.min(p + 1, exercisesTotalPages))
+              }
+              disabled={exercisesPage === exercisesTotalPages}
+            >
+               »
+            </button>
+          </div>
         </section>
       </main>
       {openModal && selectedResource && initialData ? (

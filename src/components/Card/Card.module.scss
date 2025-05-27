@@ -72,6 +72,8 @@ img {
   max-width: 80%;
   font-family: "Jura", sans-serif;
 
+
+
   h4 {
     text-align: center;
   }
@@ -128,7 +130,14 @@ img {
       cursor: pointer;
     }
   }
-
+  .cardContainer{
+    section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+    }
+  }
 }
 
 /* ------------------------- */

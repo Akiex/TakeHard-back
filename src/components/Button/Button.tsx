@@ -5,6 +5,7 @@ type ButtonProps = {
   onClick?: () => void;
   variant?: "primary" | "secondary" | "danger";
   type?: "button" | "submit" | "reset";
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
 };
 
 const Button = ({ text, onClick, variant = "primary" }: ButtonProps) => {

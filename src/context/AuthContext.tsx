@@ -39,12 +39,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (token: string, admin: boolean) => {
-    console.log("login() called with", token, admin);
+
     localStorage.setItem("token", token);
     setIsConnected(true);
     setIsAdmin(admin);
     const decoded: any = JSON.parse(atob(token.split(".")[1]));
-    console.log("Decoded JWT in login():", decoded);
     setUserId(decoded.user_id);
   };
 
