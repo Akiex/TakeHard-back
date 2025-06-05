@@ -8,12 +8,12 @@ const Home: React.FC = () => {
       <ErrorBoundary>
         <h2 className="title">Les derniers templates et exercices</h2>
         <article className="Templates">
-          <h2>Templates à la une</h2>
+          <h3>Templates à la une</h3>
           <CardWrapper type="templates" />
         </article>
 
         <article className="Exercices">
-          <h2>Exercices à la une</h2>
+          <h3>Exercices à la une</h3>
           <CardWrapper type="exercices" />
         </article>
       </ErrorBoundary>

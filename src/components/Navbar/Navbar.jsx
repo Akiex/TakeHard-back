@@ -11,6 +11,7 @@ const Navbar = () => {
       <button
         className={`${styles.burger} ${isOpen ? styles.open : ""}`}
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
       >
         <span aria-hidden="true"></span>
       </button>

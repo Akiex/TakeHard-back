@@ -77,12 +77,12 @@ const UserTemplateCard: React.FC<Props> = ({
       className={`${styles.card} ${isSelected ? styles.selected : ""}`}
       onClick={onSelect}
     >
-      <h4 className={styles.title}>{template.name}</h4>
+      <h4 className={styles.title}>{template.name || "Template sans nom"}</h4>
       <p className={styles.description}>{template.description}</p>
 
       {exercisesWithSets.map(({ exercise, sets }) => (
         <div key={exercise.id} className={styles.exerciseBlock}>
-          <h5 className={styles.exerciseTitle}>{exercise.name}</h5>
+          <h5 className={styles.exerciseTitle}>{exercise.name || "Exercice sans nom"}</h5>
           <ul className={styles.setList}>
             {sets.map((s) => (
               <li key={s.id} className={styles.setItem}>
@@ -93,9 +93,9 @@ const UserTemplateCard: React.FC<Props> = ({
         </div>
       ))}
 
-      <h5 className={styles.total}>
+      <p className={styles.total}>
         Total dépense estimée séance : {Math.round(totalCalories)} kcal
-      </h5>
+      </p>
     </div>
   );
 };

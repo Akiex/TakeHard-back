@@ -6,38 +6,36 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.grid}>
-          {/* Colonne 1 - Branding */}
+          {/* Colonne 1 – Branding */}
           <div className={styles.brand}>
-            <img src={logo} alt="Logo" className={styles.logo} />
-            <p className={styles.description}>
+            <img src={logo} alt="Logo Take-Hardvantage" className={styles.logo} />
+            <p className={styles.description} >
               Take-Hardvantage est une plateforme d’outils pour les sportifs
               passionnés.
             </p>
             <ul className={styles.socials}>
               <li>
-                <a href="#" className={styles.icon}>
-                  <i className="fab fa-twitter"></i>
+                <a href="#" className={styles.icon} aria-label="Twitter">
+                  <i className="fab fa-twitter" aria-hidden="true"></i>
                 </a>
               </li>
               <li>
-                <a href="#" className={styles.icon}>
-                  <i className="fab fa-facebook-f"></i>
+                <a href="#" className={styles.icon} aria-label="Facebook">
+                  <i className="fab fa-facebook-f" aria-hidden="true"></i>
                 </a>
               </li>
               <li>
-                <a href="#" className={styles.icon}>
-                  <i className="fab fa-instagram"></i>
+                <a href="#" className={styles.icon} aria-label="Instagram">
+                  <i className="fab fa-instagram" aria-hidden="true"></i>
                 </a>
               </li>
               <li>
-                <a href="#" className={styles.icon}>
-                  <i className="fab fa-github"></i>
+                <a href="#" className={styles.icon} aria-label="GitHub">
+                  <i className="fab fa-github" aria-hidden="true"></i>
                 </a>
               </li>
             </ul>
           </div>
-
-          {/* Colonne 2 - Entreprise */}
           <div className={styles.section}>
             <h5>Entreprise</h5>
             <ul>
@@ -55,8 +53,6 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-
-          {/* Colonne 3 - Aide */}
           <div className={styles.section}>
             <h5>Aide</h5>
             <ul>
@@ -75,7 +71,6 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-
         <hr />
         <p className={styles.copyright}>
           &copy; {new Date().getFullYear()} Take-Hardvantage. Tous droits

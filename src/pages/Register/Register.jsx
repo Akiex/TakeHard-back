@@ -1,29 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { createUser } from "../../services/api";
 import Button from "../../components/Button/Button";
 import styles from "./Register.module.scss";
-import { API_BASE_URL } from "../../config/apiConfig";
-import { API_ENDPOINTS } from "../../config/apiConfig";
 
 const Register = () => {
-  // États pour les champs du formulaire
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user"); // Rôle par défaut
-  const [isSubmitting, setIsSubmitting] = useState(false); // État pour empêcher les doubles soumissions
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("user");
 
-  // Gestionnaire de soumission du formulaire
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, navigate]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting) return;
 
-    // Bloque les appels multiples
-    if (isSubmitting) {
+    if (password !== confirmPassword) {
+      setErrorMessage("Les mots de passe ne correspondent pas.");
+      setSuccessMessage("");
       return;
     }
-
-    // Active l'état "en cours de soumission"
+    setErrorMessage("");
     setIsSubmitting(true);
 
     try {
@@ -35,18 +48,23 @@ const Register = () => {
         role,
       };
 
-      // Appel à l'API via le service
-      const data = await createUser(userData);
-      console.log("Inscription réussie :", data);
+      await createUser(userData);
+      setSuccessMessage(
+        "Inscription réussie ! Vous allez être redirigé(e) vers la page de connexion."
+      );
+      setErrorMessage("");
 
-      // Réinitialisation des champs après succès
+      // Réinitialiser les champs
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       setRole("user");
     } catch (error) {
-      console.error("Erreur lors de l'inscription :", error.message);
+      console.error("Erreur lors de l'inscription :", error);
+      setErrorMessage(error.message || "Une erreur est survenue lors de l'inscription.");
+      setSuccessMessage("");
     } finally {
       setIsSubmitting(false);
     }
@@ -97,7 +115,54 @@ const Register = () => {
             required
           />
 
-          <Button text="S'inscrire" variant="secondary" type="submit" />
+          <label htmlFor="confirmPassword">Confirmer le mot de passe :</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+          {successMessage && <p className={styles.success}>{successMessage}</p>}
+
+          <label htmlFor="confidential">
+            J'accepte la{" "}
+            <a
+              href="/confidentialite"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              politique de confidentialité
+            </a>
+          </label>
+          <input
+            type="checkbox"
+            name="confidential"
+            id="confidential"
+            required
+          />
+
+          <label htmlFor="cgu">
+            J'accepte les{" "}
+            <a
+              href="/conditions-generales"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              CGU
+            </a>
+          </label>
+          <input type="checkbox" name="cgu" id="cgu" required />
+
+          <Button
+            text={isSubmitting ? "En cours..." : "S'inscrire"}
+            variant="secondary"
+            type="submit"
+            disabled={isSubmitting}
+          />
         </form>
       </div>
     </div>

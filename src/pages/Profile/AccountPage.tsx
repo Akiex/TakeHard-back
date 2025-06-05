@@ -36,7 +36,7 @@ const AccountPage = () => {
 
   return (
     <div className={styles.containerAccountPage}>
-      <h1>Profil de l'utilisateur</h1>
+      <h2>Profil de l'utilisateur</h2>
 
       <CreateTemplateForm
         userId={Number(id)}

@@ -20,7 +20,7 @@ class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <h1>Quelque chose s'est mal passé. Veuillez réessayer plus tard.</h1>
+        <h2>Quelque chose s'est mal passé. Veuillez réessayer plus tard.</h2>
       );
     }
 

@@ -4,9 +4,45 @@ import CardTemplate from "./../../components/Card/CardTemplate";
 import { API_BASE_URL } from "./../../config/apiConfig";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import Slider, { Settings } from "react-slick";
 import styles from "./Card.module.scss";
 import CardModal from "./cardModal";
+
+// === Flèche personnalisée pour « Précédent » ===
+interface ArrowProps {
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}
+
+const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
+  return (
+    <button
+      type="button"
+      className={className}
+      style={{ ...style }}
+      onClick={onClick}
+      aria-label="Diapositive précédente"
+    >
+      {/* Par exemple, on met une icône décorative avec aria-hidden */}
+      <i className="fas fa-chevron-left" aria-hidden="true" />
+    </button>
+  );
+};
+
+const NextArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
+  return (
+    <button
+      type="button"
+      className={className}
+      style={{ ...style }}
+      onClick={onClick}
+      aria-label="Diapositive suivante"
+    >
+      <i className="fas fa-chevron-right" aria-hidden="true" />
+    </button>
+  );
+};
 
 interface CardWrapperProps {
   type: "exercices" | "templates";
@@ -18,7 +54,8 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const settings = {
+  // === Paramètres react-slick avec flèches et dots accessibles ===
+  const settings: Settings = {
     centerMode: false,
     dots: true,
     infinite: true,
@@ -31,6 +68,30 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
     autoplaySpeed: 7000,
     cssEase: "linear",
     pauseOnHover: true,
+
+    // Flèches personnalisées :
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+
+    // Pagination : customPaging reçoit l’index (0-based) du dot
+    customPaging: (i) => (
+      <button
+        type="button"
+        aria-label={`Aller à la diapositive ${i + 1}`}
+        className={styles.dotButton}
+      >
+        {/* Optionnellement, un visuel minimal pour le dot, sans texte */}
+        <span aria-hidden="true" className={styles.dotVisual} />
+      </button>
+    ),
+
+    // On peut aussi ajouter un appendDots pour personnaliser le conteneur
+    appendDots: (dots) => (
+      <div>
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </div>
+    ),
+
     responsive: [
       {
         breakpoint: 1024,
@@ -69,7 +130,11 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
       })
       .then((data) => {
         if (Array.isArray(data)) {
-          setCards(data);
+          const filtered =
+            type === "templates"
+              ? data.filter((item) => item.is_public === true)
+              : data;
+          setCards(filtered);
         } else {
           console.error("Données inattendues:", data);
           setError("Format de données inattendu.");
@@ -102,7 +167,7 @@ const CardWrapper: React.FC<CardWrapperProps> = ({ type }) => {
           const onClick = () => setSelectedCard(isSel ? null : card.id);
           return (
             <div key={card.id} className={styles.slideWrapper}>
-              <div className={`${styles.cardContainer}`} onClick={onClick}>
+              <div className={styles.cardContainer} onClick={onClick}>
                 {type === "exercices" ? (
                   <CardExercice
                     exercise={card}

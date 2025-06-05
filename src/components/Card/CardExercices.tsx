@@ -43,7 +43,7 @@ const CardExercice: React.FC<Props> = ({ exercise, isSelected, onSelect }) => {
       className={`${styles.Exercises} ${isSelected ? styles.selected : ""}`}
       onClick={onSelect}
     >
-      <h4>{exercise.name}</h4>
+      <h4>{exercise.name || "Exercice sans nom"} </h4>
       <p>{exercise.description}</p>
       <p>Groupe musculaire: {firstGroupName}</p>
       {imageSrc && <img className={styles.imageBlock} src={imageSrc} alt="illustration groupe musculaire" />}

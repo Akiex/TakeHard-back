@@ -61,7 +61,7 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
 
   return (
     <div className={` ${isSelected ? styles.selected : ""}`} onClick={onSelect}>
-      <h4>{template.name}</h4>
+      <h3>{template.name || "Template sans nom"}</h3>
       <p>{template.description}</p>
 
       {exercisesWithSets.map(({ exercise, sets }) => {
@@ -75,7 +75,7 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
 
         return (
           <div key={exercise.id} className={styles.exerciseBlock}>
-            <h5 className={`${styles.test}`}>{exercise.name}</h5>
+            <h5 className={`${styles.test}`}>{exercise.name || "Exercice sans nom"}</h5>
             <ul className={` ${styles.setList} ${styles.test}`}>
               {sets.map((s) => (
                 <li
@@ -91,7 +91,7 @@ const CardTemplate: React.FC<Props> = ({ template, isSelected, onSelect }) => {
         );
       })}
 
-      <h5>Total dépense estimée séance : {totalCalories.toFixed(2)} kcal</h5>
+      <p>Total dépense estimée séance : {totalCalories.toFixed(2)} kcal</p>
     </div>
   );
 };

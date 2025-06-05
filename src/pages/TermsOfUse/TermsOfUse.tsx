@@ -4,7 +4,7 @@ import styles from "../../styles/LegalPage.module.scss";
 const TermsOfUse = () => {
   return (
     <section className={styles.legalPage}>
-      <h1>Conditions Générales d'Utilisation</h1>
+      <h2>Conditions Générales d'Utilisation</h2>
 
       <p>
         Bienvenue sur TakeHardvantage. En accédant à notre application, vous

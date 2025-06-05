@@ -4,7 +4,7 @@ import styles from "../../styles/LegalPage.module.scss";
 const PrivacyPolicy = () => {
   return (
     <section className={styles.legalPage}>
-      <h1>Politique de Confidentialité</h1>
+      <h2>Politique de Confidentialité</h2>
 
       <p>
         Cette politique décrit comment TakeHardvantage collecte, utilise et
