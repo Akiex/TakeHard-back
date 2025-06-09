@@ -6,6 +6,7 @@ use PDO;
 use PDOException;
 
 
+
 class MuscleGroupManager {
     private $pdo;
 

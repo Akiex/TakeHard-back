@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1) Capter les OPTIONS sur /api → renvoyer 200 pour le préflight
+RewriteCond %{REQUEST_URI} ^/api/
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^api(/.*)?$ api/public/index.php [L,QSA]
+
+
+    # 2) Si le chemin demandé correspond à un vrai fichier ou dossier (assets, etc.) → servir tel quel
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # 3) Toutes les URL commençant par /api → passer par votre front-controller Slim
+    RewriteRule ^api(/.*)?$ api/public/index.php [L,QSA]
+
+    # 4) Tout le reste (routes React de la SPA) → index.html
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # CORS pour toutes les réponses
+    Header always set Access-Control-Allow-Origin  "https://takehardvantage.42web.io"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-HTTP-Method-Override"
+</IfModule>

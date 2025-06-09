@@ -4,26 +4,36 @@ import {
   getDefaultHeaders,
 } from "./../config/apiConfig";
 
+// DELETE override
 export async function apiDelete(resource: string, id: number) {
   const url = `${API_BASE_URL}${API_ENDPOINTS.delete(resource, id)}`;
   const res = await fetch(url, {
-    method: "DELETE",
-    headers: getDefaultHeaders(),
+    method: "POST",                          // POST au lieu de DELETE
+    headers: {
+      ...getDefaultHeaders(),
+      "X-HTTP-Method-Override": "DELETE",   // override
+    },
   });
   if (!res.ok) throw new Error(`Erreur DELETE ${res.status}`);
   return res.json();
 }
 
+// UPDATE override
 export async function apiUpdate(resource: string, id: number, payload: any) {
   const url = `${API_BASE_URL}${API_ENDPOINTS.update(resource, id)}`;
   const res = await fetch(url, {
-    method: "PUT",
-    headers: { ...getDefaultHeaders(), "Content-Type": "application/json" },
+    method: "POST",                          // POST au lieu de PUT
+    headers: {
+      ...getDefaultHeaders(),
+      "Content-Type": "application/json",
+      "X-HTTP-Method-Override": "PUT",      // override
+    },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error(`Erreur UPDATE ${res.status}`);
   return res.json();
 }
+
 export const fetchResource = async <T>(
   url: string,
   setter: (data: T[]) => void,

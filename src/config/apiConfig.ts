@@ -34,10 +34,10 @@ export const API_ENDPOINTS = {
   updateWorkout: (id: number) => `/workouts/${id}`,
   deleteWorkout: (id: number) => `/workouts/${id}`,
   getAllMuscleGroups: "/muscle-groups",
-  createMuscleGroup: "/muscle_groups",
-  getMuscleGroup: (id: number) => `/muscle_groups/${id}`,
-  updateMuscleGroup: (id: number) => `/muscle_groups/${id}`,
-  deleteMuscleGroup: (id: number) => `/muscle_groups/${id}`,
+  createMuscleGroup: "/muscle-groups",
+  getMuscleGroup: (id: number) => `/muscle-groups/${id}`,
+  updateMuscleGroup: (id: number) => `/muscle-groups/${id}`,
+  deleteMuscleGroup: (id: number) => `/muscle-groups/${id}`,
   getAllExercisesByMuscleGroup: (id: number) =>
     `/muscle_groups/${id}/exercises`,
 
@@ -52,5 +52,6 @@ export const getDefaultHeaders = (): HeadersInit => {
     "Content-Type": "application/json",
     Authorization: token ? `Bearer ${token}` : "",
     "Accept-Language": "fr",
+    
   };
 };

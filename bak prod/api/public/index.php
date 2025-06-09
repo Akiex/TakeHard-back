@@ -16,12 +16,23 @@ $container = $containerBuilder->build();
 
 AppFactory::setContainer($container);
 $app = AppFactory::create();
-
+$app->setBasePath('/api');
 $app->addBodyParsingMiddleware();
+$app->add(function ($request, $handler) {
+    $override = $request->getHeaderLine('X-HTTP-Method-Override');
+    if ($override) {
+        $request = $request->withMethod($override);
+    }
+    return $handler->handle($request);
+});
+
+// 2) CORS
+$app->add(new CorsMiddleware());
+
+// 3) Routing
 $app->addRoutingMiddleware();
 
-// ─────── Insérer le CorsMiddleware ici ───────
-$app->add(new CorsMiddleware());
+
 
 // Gestionnaire d’erreurs (errorHandler)
 if ($container->has('errorHandler')) {
@@ -32,7 +43,7 @@ if ($container->has('errorHandler')) {
 }
 
 // (Optionnel) définir le base path si vos routes sont sous /api
-// $app->setBasePath('/api');
+
 
 // ───── Routes ─────
 $app->get('/', function ($req, $res) {
@@ -40,14 +51,21 @@ $app->get('/', function ($req, $res) {
     return $res->withHeader('Content-Type', 'application/json');
 });
 
-// Users
 $app->group('/users', function (RouteCollectorProxy $group) {
-    $group->post('',   App\Controllers\UserController::class . ':createUser');
-    $group->get('',    App\Controllers\UserController::class . ':getAllUsers');
-    $group->get('/{id}',  App\Controllers\UserController::class . ':getUser');
-    $group->put('/{id}',  App\Controllers\UserController::class . ':updateUser');
+    // Création d’un utilisateur
+    $group->post('', App\Controllers\UserController::class . ':createUser');
+
+    // Authentification / Inscription
+    $group->post('/login',    App\Controllers\AuthController::class . ':login');
+    $group->post('/register', App\Controllers\AuthController::class . ':register');
+
+    // Récupération
+    $group->get('',         App\Controllers\UserController::class . ':getAllUsers');
+    $group->get('/{id}',    App\Controllers\UserController::class . ':getUser');
+
+    // Modification & suppression
+    $group->put('/{id}',    App\Controllers\UserController::class . ':updateUser');
     $group->delete('/{id}', App\Controllers\UserController::class . ':deleteUser');
-    // …
 });
 
 // Exercises
@@ -84,6 +102,11 @@ $app->group('/muscle-groups', function (RouteCollectorProxy $group) {
     $group->get('/{id}',  App\Controllers\MuscleGroupController::class . ':getMuscleGroup');
     $group->put('/{id}',  App\Controllers\MuscleGroupController::class . ':updateMuscleGroup');
     $group->delete('/{id}', App\Controllers\MuscleGroupController::class . ':deleteMuscleGroup');
+});
+
+// Global OPTIONS handler (préflight CORS)
+$app->options('/{routes:.+}', function ($request, $response) {
+    return $response;
 });
 
 $app->run();
