@@ -3,6 +3,7 @@
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
 export const API_ENDPOINTS = {
+  //USers
   login: "/users/login",
   refreshToken: "/api/auth/token/refresh",
   register: "/users",
@@ -10,16 +11,19 @@ export const API_ENDPOINTS = {
   getUser: (id: number) => `/users/${id}`,
   updateUser: (id: number) => `/users/${id}`,
   deleteUser: (id: number) => `/users/${id}`,
+  //exercises
   getAllExercises: "/exercises",
   createExercise: "/exercises",
   getExercise: (id: number) => `/exercises/${id}`,
   updateExercise: (id: number) => `/exercises/${id}`,
   deleteExercise: (id: number) => `/exercises/${id}`,
+  //sets
   getAllSets: "/sets",
   createSet: "/sets",
   getSet: (id: number) => `/sets/${id}`,
   updateSet: (id: number) => `/sets/${id}`,
   deleteSet: (id: number) => `/sets/${id}`,
+  //templates
   getAllTemplates: "/templates",
   createTemplate: "/templates",
   getTemplate: (id: number) => `/templates/${id}`,
@@ -28,11 +32,7 @@ export const API_ENDPOINTS = {
 
   updateTemplate: (id: number) => `/templates/${id}`,
   deleteTemplate: (id: number) => `/templates/${id}`,
-  getAllWorkouts: "/workouts",
-  createWorkout: "/workouts",
-  getWorkout: (id: number) => `/workouts/${id}`,
-  updateWorkout: (id: number) => `/workouts/${id}`,
-  deleteWorkout: (id: number) => `/workouts/${id}`,
+  //muscle groups
   getAllMuscleGroups: "/muscle-groups",
   createMuscleGroup: "/muscle-groups",
   getMuscleGroup: (id: number) => `/muscle-groups/${id}`,

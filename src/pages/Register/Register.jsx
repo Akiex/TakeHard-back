@@ -4,6 +4,15 @@ import { createUser } from "../../services/api";
 import Button from "../../components/Button/Button";
 import styles from "./Register.module.scss";
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRules = {
+  minLength: 8,
+  hasUpperCase: /[A-Z]/,
+  hasLowerCase: /[a-z]/,
+  hasNumber: /[0-9]/,
+  hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/,
+};
+
 const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,8 +21,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("user");
 
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
@@ -27,16 +36,51 @@ const Register = () => {
     }
   }, [successMessage, navigate]);
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!firstName.trim()) newErrors.firstName = "Le prénom est requis.";
+    if (!lastName.trim()) newErrors.lastName = "Le nom est requis.";
+
+    if (!emailRegex.test(email)) {
+      newErrors.email = "Adresse email invalide.";
+    }
+
+    if (password.length < passwordRules.minLength) {
+      newErrors.password = `Le mot de passe doit faire au moins ${passwordRules.minLength} caractères.`;
+    } else {
+      if (!passwordRules.hasUpperCase.test(password)) {
+        newErrors.password = "Le mot de passe doit contenir au moins une majuscule.";
+      }
+      if (!passwordRules.hasLowerCase.test(password)) {
+        newErrors.password = "Le mot de passe doit contenir au moins une minuscule.";
+      }
+      if (!passwordRules.hasNumber.test(password)) {
+        newErrors.password = "Le mot de passe doit contenir au moins un chiffre.";
+      }
+      if (!passwordRules.hasSpecialChar.test(password)) {
+        newErrors.password = "Le mot de passe doit contenir au moins un caractère spécial.";
+      }
+    }
+
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (isSubmitting) return;
 
-    if (password !== confirmPassword) {
-      setErrorMessage("Les mots de passe ne correspondent pas.");
-      setSuccessMessage("");
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    setErrorMessage("");
+
+    setErrors({});
     setIsSubmitting(true);
 
     try {
@@ -52,7 +96,6 @@ const Register = () => {
       setSuccessMessage(
         "Inscription réussie ! Vous allez être redirigé(e) vers la page de connexion."
       );
-      setErrorMessage("");
 
       // Réinitialiser les champs
       setFirstName("");
@@ -63,8 +106,7 @@ const Register = () => {
       setRole("user");
     } catch (error) {
       console.error("Erreur lors de l'inscription :", error);
-      setErrorMessage(error.message || "Une erreur est survenue lors de l'inscription.");
-      setSuccessMessage("");
+      setErrors({ api: error.message || "Une erreur est survenue lors de l'inscription." });
     } finally {
       setIsSubmitting(false);
     }
@@ -74,7 +116,7 @@ const Register = () => {
     <div>
       <div className={styles.registerForm}>
         <h2>Inscription</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <label htmlFor="firstName">Prénom :</label>
           <input
             type="text"
@@ -84,6 +126,7 @@ const Register = () => {
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
+          {errors.firstName && <p className={styles.error}>{errors.firstName}</p>}
 
           <label htmlFor="lastName">Nom :</label>
           <input
@@ -94,6 +137,7 @@ const Register = () => {
             onChange={(e) => setLastName(e.target.value)}
             required
           />
+          {errors.lastName && <p className={styles.error}>{errors.lastName}</p>}
 
           <label htmlFor="email">Email :</label>
           <input
@@ -104,6 +148,7 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          {errors.email && <p className={styles.error}>{errors.email}</p>}
 
           <label htmlFor="password">Mot de passe :</label>
           <input
@@ -114,6 +159,7 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {errors.password && <p className={styles.error}>{errors.password}</p>}
 
           <label htmlFor="confirmPassword">Confirmer le mot de passe :</label>
           <input
@@ -124,36 +170,17 @@ const Register = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          {errors.confirmPassword && <p className={styles.error}>{errors.confirmPassword}</p>}
 
-          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-          {successMessage && <p className={styles.success}>{successMessage}</p>}
+          {errors.api && <p className={styles.error}>{errors.api}</p>}
 
           <label htmlFor="confidential">
-            J'accepte la{" "}
-            <a
-              href="/confidentialite"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              politique de confidentialité
-            </a>
+            J'accepte la <a href="/confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>
           </label>
-          <input
-            type="checkbox"
-            name="confidential"
-            id="confidential"
-            required
-          />
+          <input type="checkbox" name="confidential" id="confidential" required />
 
           <label htmlFor="cgu">
-            J'accepte les{" "}
-            <a
-              href="/conditions-generales"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              CGU
-            </a>
+            J'accepte les <a href="/conditions-generales" target="_blank" rel="noopener noreferrer">CGU</a>
           </label>
           <input type="checkbox" name="cgu" id="cgu" required />
 

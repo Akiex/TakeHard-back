@@ -37,7 +37,7 @@ class TemplateManager
             LEFT JOIN sets s           ON ts.set_id = s.id
             LEFT JOIN sets_exercise se ON s.id = se.set_id
             LEFT JOIN exercises e      ON se.exercise_id = e.id
-            ORDER BY t.id, s.id, se.id
+            ORDER BY t.id, s.id, se.exercise_id
         ";
         $stmt = $this->pdo->query($sql);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
